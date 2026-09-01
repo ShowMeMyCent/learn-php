@@ -6,3 +6,4 @@ react
 .idea
 *.md
 !README.md
+!phpdeck/slides/*.md
