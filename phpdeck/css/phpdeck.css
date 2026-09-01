@@ -1,0 +1,427 @@
+/*
+ * phpdeck.css — style khusus untuk deck "Dari C ke PHP".
+ * Dimuat SETELAH dist/theme/black.css supaya override menang tanpa
+ * perlu menyentuh file bawaan reveal.js.
+ */
+
+:root {
+	--pd-core: #4ade80;
+	--pd-self: #fbbf24;
+	--pd-danger: #f87171;
+	--pd-safe: #4ade80;
+	--pd-c: #60a5fa;
+	--pd-php: #a78bfa;
+	--pd-muted: rgba(255, 255, 255, 0.55);
+	--pd-panel: rgba(255, 255, 255, 0.06);
+	--pd-border: rgba(255, 255, 255, 0.16);
+}
+
+/* ------------------------------------------------------------------ *
+ * Dasar: rapatkan heading, kecilkan sedikit teks agar muat 1 ide/slide
+ * ------------------------------------------------------------------ */
+
+.reveal h1 {
+	font-size: 2.1em;
+}
+.reveal h2 {
+	font-size: 1.55em;
+	margin-bottom: 0.5em;
+}
+.reveal h3 {
+	font-size: 1.15em;
+	color: var(--pd-muted);
+	font-weight: 400;
+	text-transform: none;
+}
+.reveal p,
+.reveal li {
+	font-size: 0.85em;
+	line-height: 1.45;
+}
+.reveal section > ul,
+.reveal section > ol {
+	display: block;
+	margin-left: 1.2em;
+}
+
+/* ------------------------------------------------------------------ *
+ * Code block: batasi tinggi, aktifkan scroll, kecilkan font
+ * Listing PHP panjang tetap terbaca dari belakang ruangan.
+ * ------------------------------------------------------------------ */
+
+.reveal pre {
+	width: 100%;
+	margin: 0.6em auto;
+	box-shadow: none;
+	font-size: 0.5em;
+}
+.reveal pre code {
+	max-height: 460px;
+	padding: 1em 1.1em;
+	line-height: 1.35;
+	border-radius: 6px;
+	overflow: auto;
+}
+/* Judul kecil di atas code block: <p class="filename">config/database.php</p> */
+.reveal .filename {
+	font-family: monospace;
+	font-size: 0.5em;
+	color: var(--pd-muted);
+	text-align: left;
+	margin: 0 0 -0.4em 0.2em;
+	letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------------ *
+ * Badge track: CORE vs SELF-STUDY
+ * ------------------------------------------------------------------ */
+
+.reveal .badge {
+	display: inline-block;
+	font-size: 0.36em;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	padding: 0.32em 0.9em;
+	border-radius: 999px;
+	vertical-align: middle;
+}
+.reveal .badge-core {
+	color: #052e16;
+	background: var(--pd-core);
+}
+.reveal .badge-self {
+	color: #451a03;
+	background: var(--pd-self);
+}
+.reveal .badge-hands {
+	color: #0c0a09;
+	background: #f472b6;
+}
+
+/* Penanda halus di sisi kiri slide self-study */
+.reveal section[data-self] {
+	border-left: 3px solid var(--pd-self);
+	padding-left: 1.2em;
+}
+
+/* Label part di pojok, mis. <p class="part-label">PART 3 · PDO + READ</p> */
+.reveal .part-label {
+	font-size: 0.42em;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--pd-muted);
+	margin-bottom: 0.4em;
+}
+
+/* ------------------------------------------------------------------ *
+ * Perbandingan C vs PHP berdampingan
+ * ------------------------------------------------------------------ */
+
+.reveal .cmp {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1.1em;
+	align-items: start;
+	margin-top: 0.6em;
+}
+.reveal .cmp > div {
+	background: var(--pd-panel);
+	border: 1px solid var(--pd-border);
+	border-radius: 8px;
+	padding: 0.5em 0.7em 0.7em;
+}
+.reveal .cmp h4 {
+	font-size: 0.5em;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	margin: 0 0 0.2em;
+}
+.reveal .cmp-c {
+	border-top: 3px solid var(--pd-c) !important;
+}
+.reveal .cmp-c h4 {
+	color: var(--pd-c);
+}
+.reveal .cmp-php {
+	border-top: 3px solid var(--pd-php) !important;
+}
+.reveal .cmp-php h4 {
+	color: var(--pd-php);
+}
+.reveal .cmp pre {
+	margin: 0;
+	font-size: 0.46em;
+}
+.reveal .cmp pre code {
+	max-height: 340px;
+}
+
+@media (max-width: 800px) {
+	.reveal .cmp {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ------------------------------------------------------------------ *
+ * Callout: kode rentan (danger) vs kode aman (safe)
+ * ------------------------------------------------------------------ */
+
+.reveal .danger,
+.reveal .safe {
+	border-radius: 8px;
+	padding: 0.5em 0.9em 0.7em;
+	margin: 0.5em 0;
+	text-align: left;
+}
+.reveal .danger {
+	background: rgba(248, 113, 113, 0.1);
+	border: 1px solid rgba(248, 113, 113, 0.45);
+}
+.reveal .safe {
+	background: rgba(74, 222, 128, 0.1);
+	border: 1px solid rgba(74, 222, 128, 0.45);
+}
+.reveal .danger > .label,
+.reveal .safe > .label {
+	display: block;
+	font-size: 0.45em;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	margin-bottom: 0.2em;
+}
+.reveal .danger > .label {
+	color: var(--pd-danger);
+}
+.reveal .safe > .label {
+	color: var(--pd-safe);
+}
+.reveal .danger pre,
+.reveal .safe pre {
+	margin: 0.2em 0 0;
+}
+
+/* ------------------------------------------------------------------ *
+ * Mental model: Browser -> HTTP -> PHP -> SQL -> MySQL -> ...
+ * ------------------------------------------------------------------ */
+
+.reveal .flow {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 0.35em;
+	margin: 0.8em 0;
+}
+.reveal .flow span {
+	font-size: 0.46em;
+	font-family: monospace;
+	letter-spacing: 0.03em;
+	padding: 0.45em 0.75em;
+	border-radius: 6px;
+	background: var(--pd-panel);
+	border: 1px solid var(--pd-border);
+	color: var(--pd-muted);
+	white-space: nowrap;
+	transition: all 0.25s ease;
+}
+.reveal .flow span.arrow {
+	background: none;
+	border: none;
+	padding: 0 0.05em;
+}
+/* Tandai tahap yang sedang dibahas: <span class="on">SQL</span> */
+.reveal .flow span.on {
+	color: #0c0a09;
+	background: var(--pd-core);
+	border-color: var(--pd-core);
+	font-weight: 700;
+}
+
+/* Versi vertikal untuk diagram alur bertingkat */
+.reveal .flow-v {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.15em;
+	font-family: monospace;
+	font-size: 0.5em;
+	line-height: 1.5;
+}
+.reveal .flow-v .arrow {
+	color: var(--pd-muted);
+}
+
+/* ------------------------------------------------------------------ *
+ * Mockup browser & terminal
+ * ------------------------------------------------------------------ */
+
+.reveal .mock-browser {
+	background: #1e1e2e;
+	border: 1px solid var(--pd-border);
+	border-radius: 8px;
+	overflow: hidden;
+	text-align: left;
+	margin: 0.6em auto;
+	max-width: 90%;
+}
+.reveal .mock-browser .bar {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	background: #2a2a3c;
+	padding: 0.4em 0.7em;
+	font-family: monospace;
+	font-size: 0.4em;
+	color: var(--pd-muted);
+}
+.reveal .mock-browser .bar::before {
+	content: '';
+	flex: 0 0 auto;
+	width: 2.2em;
+	height: 0.7em;
+	background: radial-gradient(circle 0.35em at 0.35em 50%, #f87171 98%, transparent 0),
+		radial-gradient(circle 0.35em at 1.1em 50%, #fbbf24 98%, transparent 0),
+		radial-gradient(circle 0.35em at 1.85em 50%, #4ade80 98%, transparent 0);
+}
+.reveal .mock-browser .body {
+	padding: 0.8em 1em;
+	font-size: 0.46em;
+	line-height: 1.5;
+	color: #e5e7eb;
+}
+.reveal .mock-browser .body table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 1em;
+	margin: 0;
+}
+.reveal .mock-browser .body th,
+.reveal .mock-browser .body td {
+	border: 1px solid var(--pd-border);
+	padding: 0.25em 0.5em;
+	text-align: left;
+}
+.reveal .mock-browser .body th {
+	background: rgba(255, 255, 255, 0.06);
+}
+
+.reveal .mock-terminal {
+	background: #0c0c14;
+	border: 1px solid var(--pd-border);
+	border-radius: 8px;
+	padding: 0.9em 1.1em;
+	text-align: left;
+	font-family: monospace;
+	font-size: 0.46em;
+	line-height: 1.6;
+	color: #d4d4d8;
+	margin: 0.6em auto;
+	max-width: 90%;
+}
+.reveal .mock-terminal .prompt::before {
+	content: '$ ';
+	color: var(--pd-core);
+}
+.reveal .mock-terminal .out {
+	color: var(--pd-muted);
+}
+
+/* ------------------------------------------------------------------ *
+ * Placeholder gambar
+ * ------------------------------------------------------------------ */
+
+.reveal .imgph {
+	border: 2px dashed var(--pd-border);
+	border-radius: 8px;
+	padding: 1em 1.2em;
+	margin: 0.6em auto;
+	max-width: 85%;
+	background: rgba(255, 255, 255, 0.03);
+	color: var(--pd-muted);
+	font-size: 0.5em;
+	line-height: 1.5;
+	text-align: left;
+}
+.reveal .imgph b {
+	display: block;
+	color: var(--pd-self);
+	font-size: 0.85em;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	margin-bottom: 0.3em;
+}
+
+/* ------------------------------------------------------------------ *
+ * Checkpoint / pertanyaan
+ * ------------------------------------------------------------------ */
+
+.reveal .ask {
+	border-left: 4px solid var(--pd-self);
+	background: rgba(251, 191, 36, 0.08);
+	padding: 0.6em 1em;
+	margin: 0.7em auto;
+	max-width: 88%;
+	text-align: left;
+	font-size: 0.85em;
+	font-style: italic;
+}
+.reveal .ask b {
+	font-style: normal;
+	color: var(--pd-self);
+}
+
+.reveal .checkpoint {
+	border: 1px solid var(--pd-core);
+	background: rgba(74, 222, 128, 0.08);
+	border-radius: 8px;
+	padding: 0.6em 1em;
+	margin: 0.7em auto;
+	max-width: 88%;
+	text-align: left;
+	font-size: 0.85em;
+}
+.reveal .checkpoint b {
+	color: var(--pd-core);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	font-size: 0.8em;
+}
+
+/* Tabel jadwal / ringkasan */
+.reveal table.plain {
+	font-size: 0.5em;
+	border-collapse: collapse;
+	margin: 0.6em auto;
+}
+.reveal table.plain th,
+.reveal table.plain td {
+	border-bottom: 1px solid var(--pd-border);
+	padding: 0.35em 0.9em;
+	text-align: left;
+}
+.reveal table.plain th {
+	color: var(--pd-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 0.85em;
+}
+
+/* Teks kecil di bawah slide */
+.reveal .fineprint {
+	font-size: 0.45em;
+	color: var(--pd-muted);
+	margin-top: 0.8em;
+}
+
+/* Hint bahwa ada slide self-study di bawah */
+.reveal .downhint {
+	font-size: 0.42em;
+	color: var(--pd-self);
+	letter-spacing: 0.1em;
+	margin-top: 0.7em;
+}
+.reveal .downhint::before {
+	content: '\2193\00a0';
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Dari C ke PHP — Membangun Backend CRUD</title>
+		<meta name="description" content="Materi PHP Backend: HTTP, PDO, CRUD, dan keamanan dasar untuk peserta peminatan Backend" />
+
+		<link rel="stylesheet" href="dist/reset.css" />
+		<link rel="stylesheet" href="dist/reveal.css" />
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme" />
+
+		<!-- Theme untuk syntax highlighting -->
+		<link rel="stylesheet" href="dist/plugin/highlight/monokai.css" />
+
+		<!-- Style khusus deck ini. HARUS terakhir supaya override menang. -->
+		<link rel="stylesheet" href="phpdeck/css/phpdeck.css" />
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!--
+					CORE TRACK   = slide horizontal (panah kanan/kiri)  -> dipresentasikan 150 menit
+					SELF-STUDY   = slide vertical   (panah bawah)       -> dibaca mandiri
+
+					Separator di file .md:
+					  3 baris kosong = slide horizontal berikutnya (CORE)
+					  2 baris kosong = slide vertical  (SELF-STUDY)
+					  "Note:"        = speaker notes (maksimal SATU per slide)
+				-->
+				<section
+					data-markdown="phpdeck/slides/00-opening.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+
+				<section
+					data-markdown="phpdeck/slides/01-survival.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+
+				<section
+					data-markdown="phpdeck/slides/02-http.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+
+				<section
+					data-markdown="phpdeck/slides/03-pdo-read.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+
+				<section
+					data-markdown="phpdeck/slides/04-create.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+
+				<section
+					data-markdown="phpdeck/slides/05-session-prg.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+
+				<section
+					data-markdown="phpdeck/slides/06-security.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+
+				<section
+					data-markdown="phpdeck/slides/07-update.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+
+				<section
+					data-markdown="phpdeck/slides/08-delete.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+
+				<section
+					data-markdown="phpdeck/slides/09-validation.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+
+				<section
+					data-markdown="phpdeck/slides/10-capstone.md"
+					data-separator="^\r?\n\r?\n\r?\n"
+					data-separator-vertical="^\r?\n\r?\n"
+					data-separator-notes="^Note:"
+					data-charset="utf-8"
+				></section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="dist/plugin/markdown.js"></script>
+		<script src="dist/plugin/highlight.js"></script>
+		<script src="dist/plugin/notes.js"></script>
+		<script>
+			Reveal.initialize({
+				hash: true,
+				slideNumber: 'c/t',
+				// Beri ruang lebih untuk code block yang panjang
+				width: 1280,
+				height: 800,
+				margin: 0.06,
+				plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+			});
+		</script>
+	</body>
+</html>
