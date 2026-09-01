@@ -1,0 +1,8 @@
+node_modules
+test
+examples
+react
+.git
+.idea
+*.md
+!README.md
