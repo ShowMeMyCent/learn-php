@@ -124,5 +124,10 @@
 		"node-qunit-puppeteer": {
 			"puppeteer": "$puppeteer"
 		}
+	},
+	"allowScripts": {
+		"esbuild": true,
+		"puppeteer": true,
+		"@parcel/watcher": true
 	}
 }
