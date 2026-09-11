@@ -5,15 +5,14 @@
 
 ## Membangun Backend CRUD
 
-<p class="fineprint">Peminatan Backend &middot; 150 menit &middot; sesi hybrid</p>
+<p class="fineprint">Peminatan Backend &middot; Sesi Hands-on &amp; Live Coding</p>
 
-Note: Selamat datang. Sebelum mulai, dua hal operasional yang perlu dipastikan sekarang juga, bukan nanti di tengah sesi.
+Note: **🗣️ Ngomong ke Peserta:**
+"Halo semuanya, selamat datang! Hari ini kita bakal belajar cara kerja web backend lewat PHP, berangkat dari apa yang sudah kalian kuasai di praktikum C kemarin. Sebelum kita mulai, kita pastikan dua server lokal kalian sudah siap. Deck slide ini jalan di port 8000, dan aplikasi PHP kita nanti jalan di port 8001 atau Laragon. Kita pastikan database `schema.sql` dan `seed.sql` sudah siap di Laragon ya."
 
-Pertama, deck ini dijalankan lewat `npm start` dan dibuka di `http://localhost:8000/phpdeck.html`. Kalau dibuka langsung lewat `file://`, file markdown-nya tidak akan termuat dan slide akan kosong.
-
-Kedua, dan ini yang sering bikin kacau: **ada dua server berbeda hari ini.** Deck jalan di port 8000 (vite). Aplikasi PHP yang kita bangun jalan di server lain — XAMPP atau `php -S localhost:8001`. Dua-duanya harus sudah menyala sebelum menit pertama. Pastikan peserta juga sudah menjalankan `schema.sql` dan `seed.sql`.
-
-Tanyakan sekarang: "Siapa yang belum berhasil import SQL?" Selesaikan di 2 menit pertama, jangan dibiarkan sampai Part 3.
+**🎯 Poin Kunci di Layar:**
+- Pastikan mereka buka slide lewat server `http://localhost:8000/phpdeck.html`, bukan klik ganda `file://`.
+- Cek cepat apakah Apache & MySQL di laptop mereka sudah aktif.
 
 
 
@@ -46,38 +45,36 @@ Tanyakan sekarang: "Siapa yang belum berhasil import SQL?" Selesaikan di 2 menit
 
 <p class="fineprint">Hari ini bukan kursus PHP dari nol. Hari ini adalah <b>delta</b>.</p>
 
-Note: Tekankan kalimat terakhir. Peserta sudah tahu apa itu loop, apa itu function, apa itu tipe data. Mengulang itu buang-buang waktu dan membosankan.
+Note: **🗣️ Ngomong ke Peserta:**
+"Kalian di sini sudah paham logika dasar dari bahasa C: apa itu variabel, if-else, looping, dan fungsi. Jadi santai saja, hari ini kita gak bakal buang waktu buat ngulang apa itu looping atau tipe data. Yang kita pelajari hari ini cuma bedanya: bagaimana program kalian yang tadinya jalan di layar hitam terminal, sekarang dijalankan oleh server buat melayani request dari browser."
 
-Yang belum mereka punya bukan "syntax PHP", melainkan **model mental tentang bagaimana program dijalankan oleh server, satu request pada satu waktu**. Program C mereka selama ini: jalan dari `main()`, hidup terus, selesai, mati. Program PHP: lahir saat request datang, mati saat response terkirim. Itu lompatan konseptualnya, bukan `$` di depan variable.
-
-Kalau ada satu hal yang harus mereka bawa pulang hari ini, itu adalah model mental di slide berikutnya — bukan hafalan fungsi.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk kolom kiri: itu modal mereka dari C.
+- Tunjuk kolom kanan: itu fokus kita bersama (HTTP + Database + Security).
 
 
 
 <p class="part-label">Part 0 · Opening</p>
 
-## Peta 150 menit
+## Peta Alur Belajar
 
 <table class="plain">
-<tr><th>Menit</th><th>Part</th><th></th></tr>
-<tr><td>0&ndash;8</td><td>Opening &amp; model mental</td><td></td></tr>
-<tr><td>8&ndash;20</td><td>1 &middot; PHP Survival Guide</td><td></td></tr>
-<tr><td>20&ndash;40</td><td>2 &middot; HTTP, GET/POST, form</td><td><span class="badge badge-hands">Ketik #1</span></td></tr>
-<tr><td>40&ndash;68</td><td>3 &middot; PDO + READ</td><td><span class="badge badge-hands">Ketik #2</span></td></tr>
-<tr><td>68&ndash;90</td><td>4+5 &middot; CREATE + PRG</td><td></td></tr>
-<tr><td>90&ndash;110</td><td>6 &middot; Security</td><td><span class="badge badge-hands">Ketik #3</span></td></tr>
-<tr><td>110&ndash;128</td><td>7+8 &middot; UPDATE + DELETE</td><td></td></tr>
-<tr><td>128&ndash;150</td><td>9 &middot; Validation + capstone</td><td></td></tr>
+<tr><th>#</th><th>Part</th><th>Fokus Materi</th><th></th></tr>
+<tr><td>0</td><td>Opening</td><td>Model Mental Backend</td><td></td></tr>
+<tr><td>1</td><td>Survival Guide</td><td>Sintaks PHP &amp; Delta dari C</td><td></td></tr>
+<tr><td>2</td><td>HTTP &amp; Form</td><td>Request/Response, GET &amp; POST</td><td><span class="badge badge-hands">Live #1</span></td></tr>
+<tr><td>3</td><td>PDO + READ</td><td>Koneksi MySQL &amp; Tampilkan Data</td><td><span class="badge badge-hands">Live #2</span></td></tr>
+<tr><td>4+5</td><td>CREATE + PRG</td><td>Form Tambah Data &amp; Session Flash</td><td></td></tr>
+<tr><td>6</td><td>Security</td><td>Cegah SQL Injection &amp; XSS</td><td><span class="badge badge-hands">Live #3</span></td></tr>
+<tr><td>7+8</td><td>UPDATE &amp; DELETE</td><td>Edit Data &amp; Operasi Hapus via POST</td><td></td></tr>
+<tr><td>9+10</td><td>Validasi &amp; Capstone</td><td>Filter Input &amp; Tugas Mandiri</td><td></td></tr>
 </table>
 
-Note: Tampilkan peta ini dan biarkan sebentar. Peserta perlu tahu bahwa sesi ini punya bentuk, bukan aliran materi tanpa ujung.
+Note: **🗣️ Ngomong ke Peserta:**
+"Ini peta alur materi kita. Kita bagi jadi topik-topik terarah dari pengenalan sampai pengamanan. Di sepanjang sesi, akan ada 3 demonstrasi live coding langsung di layar depan untuk melihat bagaimana kodenya dibuat dari nol. Kalian cukup fokus memperhatikan layar proyektor dan memahami alur logikanya. Di slide ini juga ada materi mandiri yang bisa kalian baca setelah sesi selesai."
 
-Sampaikan juga secara eksplisit bahwa **materi ini lebih panjang dari 150 menit**, dan itu memang disengaja. Ada dua jalur di deck ini:
-
-- **CORE** — yang kita bahas bersama hari ini, jalur kiri-kanan.
-- **SELF-STUDY** — slide tambahan di bawah setiap topik (tekan panah bawah), lengkap dengan penjelasan panjang untuk dibaca sendiri setelah sesi.
-
-Jangan pernah menekan panah bawah saat presentasi. Jalur CORE dirancang supaya mulus kalau kamu hanya menekan panah kanan dari awal sampai akhir.
+**🎯 Poin Kunci di Layar:**
+- Tekankan: Cuma tekan panah kanan (Core Track) selama presentasi. Jangan tekan panah bawah saat sesi live agar tidak keluar jalur.
 
 
 
@@ -106,11 +103,11 @@ Diagram client&ndash;server: browser di kiri, web server + PHP di tengah, databa
 <i>Cari: "client server architecture diagram web application php mysql"</i>
 </div>
 
-Note: Ini adalah benang merah seluruh sesi. Diagram ini akan muncul berulang kali, dan setiap kali satu tahap akan disorot untuk menunjukkan "kita sedang di sini".
+Note: **🗣️ Ngomong ke Peserta:**
+"Boleh minta tolong difoto slide ini sekarang? Ini peta jalan seluruh backend yang kita bahas hari ini. Alurnya selalu berputar: Browser ngirim request -> diterima PHP -> divalidasi -> dioper ke MySQL -> hasilnya diracik jadi HTML oleh PHP -> dikirim balik ke browser. Perhatikan: HTML itu adanya di ujung kanan sebagai output akhir. Browser kalian gak pernah tahu apa isi kode PHP di server, yang dia terima murni cuma HTML."
 
-Minta peserta memotret slide ini. Serius — suruh mereka foto. Di akhir sesi, target keberhasilan kita adalah mereka bisa menunjuk baris kode mana pun di aplikasi CRUD dan menjawab "ini ada di tahap mana pada diagram tadi".
-
-Poin penting yang sering terlewat: perhatikan bahwa **HTML ada di ujung kanan, sebagai output**, bukan di awal. Peserta yang terbiasa HTML+CSS sering mengira PHP "ditempel" ke HTML. Yang benar sebaliknya: PHP yang berjalan, dan HTML adalah teks yang PHP hasilkan. Browser tidak pernah melihat kode PHP sama sekali.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk alur bolak-balik: Request datang dari kiri, berputar di server/MySQL, balik lagi ke browser sebagai response HTML.
 
 
 
@@ -133,13 +130,11 @@ Poin penting yang sering terlewat: perhatikan bahwa **HTML ada di ujung kanan, s
 
 <p class="fineprint">Plain PHP + MySQL. Tanpa framework, tanpa Composer, tanpa OOP berat.</p>
 
-Note: **Demokan aplikasi jadinya sekarang, sungguhan, bukan cuma slide ini.** Buka di browser, tambah satu data, edit, hapus. Total 90 detik.
+Note: **🗣️ Ngomong ke Peserta:**
+"Nah, ini aplikasi yang bakal kita selesaikan hari ini: Student Management System. Kita sengaja pakai PHP murni tanpa framework dulu. Kenapa? Biar kalian paham jeroannya: cara nyambung database, cara nangani request form, dan cara ngamanin data. Begitu kalian paham fondasi ini, pindah ke Laravel atau framework apapun bakal jauh lebih gampang."
 
-Kenapa ini penting: peserta perlu melihat tujuan akhir sebelum dibawa melewati potongan-potongan kecil. Tanpa ini, Part 1 dan 2 terasa seperti materi acak. Dengan ini, setiap potongan punya tempat.
-
-Sengaja tanpa framework. Kalau kita mulai dari Laravel, mereka akan bisa membuat CRUD tapi tidak tahu apa yang terjadi — dan saat error, mereka buntu. Plain PHP memaksa setiap tahap di diagram tadi terlihat sebagai kode yang bisa ditunjuk.
-
-Sebutkan sekilas bahwa framework itu bagus dan akan dipelajari nanti; yang salah adalah mempelajarinya sebelum paham apa yang di-*abstract*.
+**🎯 Poin Kunci di Layar:**
+- [Aksi Live]: Pindah tab ke browser, buka `http://localhost:8001/index.php`, coba tambah 1 data dan hapus 1 data (demo cepat 60 detik).
 
 
 
@@ -148,20 +143,19 @@ Sebutkan sekilas bahwa framework itu bagus dan akan dipelajari nanti; yang salah
 ## Aturan main
 
 <div class="checkpoint">
-<b>3 kali kamu ikut mengetik</b><br>
-Saat muncul badge <span class="badge badge-hands">Ketik bareng</span>, laptop dibuka, semua ikut. Di luar itu, tutup laptop dan perhatikan &mdash; supaya tidak tertinggal.
+<b>Fokus Menyimak &amp; Memahami Alur</b><br>
+Sesi koding akan didemokan secara <span class="badge badge-hands">Live Coding</span> di layar depan. Fokus perhatikan alur logikanya &mdash; kamu tidak perlu panik mengetik atau takut tertinggal.
 </div>
 
-- Ketik #1 &mdash; form &rarr; `$_POST` <span class="fineprint">(Part 2)</span>
-- Ketik #2 &mdash; `SELECT` &rarr; `foreach` &rarr; tabel HTML <span class="fineprint">(Part 3)</span>
-- Ketik #3 &mdash; mencoba SQL Injection sendiri <span class="fineprint">(Part 6)</span>
+- Live #1 &mdash; Form HTML &rarr; pemrosesan `$_POST` di server <span class="fineprint">(Part 2)</span>
+- Live #2 &mdash; Koneksi database PDO &rarr; `SELECT` &rarr; tabel data <span class="fineprint">(Part 3)</span>
+- Live #3 &mdash; Simulasi serangan SQL Injection &amp; solusinya <span class="fineprint">(Part 6)</span>
 
-<p class="fineprint"><b>Dua server:</b> deck di <code>:8000</code> &middot; aplikasi PHP di <code>:8001</code></p>
+<p class="fineprint"><b>Source code lengkap</b> akan dibagikan setelah sesi untuk bahan latihan dan capstone.</p>
 
-Note: Aturan "tutup laptop saat bukan sesi ketik" terdengar kaku tapi menyelamatkan sesi 150 menit. Penyebab nomor satu sesi seperti ini molor adalah peserta yang mengetik sambil mendengarkan, lalu tertinggal, lalu bertanya hal yang sudah dibahas.
+Note: **🗣️ Ngomong ke Peserta:**
+"Aturan main kita hari ini sangat santai dan fokus: kalian gak perlu panik buru-buru ngetik di laptop. Semua bagian implementasi kode penting bakal saya demokan langsung lewat live coding di layar depan. Tugas utama kalian adalah memperhatikan alur logika, bagaimana alur data dari browser sampai ke database, dan mencatat hal-hal penting. Kodingan lengkapnya sudah disiapkan dan akan dibagikan setelah sesi, jadi kalian gak usah takut ketinggalan. Kalau ada pertanyaan soal topik lanjutan kayak OOP atau Laravel, kita catat dulu dan bahas tuntas di sesi tanya-jawab akhir ya."
 
-Sampaikan bahwa kode lengkapnya akan dibagikan setelah sesi, jadi tidak perlu mengetik untuk "menyimpan". Mengetik hanya di tiga momen yang memang butuh pengalaman tangan sendiri.
-
-Ulangi lagi soal dua server — ini sumber kebingungan yang paling sering muncul di menit ke-45. Deck bukan aplikasi. Aplikasi bukan deck. Tulis kedua URL di papan tulis kalau ada.
-
-Terakhir, sebutkan aturan parkir: kalau ada pertanyaan yang melebar (OOP? Laravel? REST API?), catat di "parking lot" dan jawab di akhir kalau masih ada waktu. Jangan dijawab di tengah — itu pembunuh jadwal terbesar.
+**🎯 Poin Kunci di Layar:**
+- Tekankan: Peserta fokus menyimak alur, pemateri yang live coding.
+- Tenangkan peserta: Semua source code lengkap dibagikan di akhir sesi.

@@ -1,9 +1,9 @@
 # Student Management System — Reference Project
 
 Ini adalah implementasi REFERENSI/SOLUSI lengkap untuk materi "Dari C ke PHP".
-Dibagikan ke peserta **setelah** sesi 150 menit selesai — selama sesi,
-`config/database.php` ditulis live dan `index.php` ditulis sebagian bersama
-peserta (lihat HANDS-ON #2 di `phpdeck/slides/03-pdo-read.md`).
+Dibagikan ke peserta **setelah** seluruh sesi materi selesai — selama sesi,
+`config/database.php` dan bagian utama CRUD didemonstrasikan secara live coding oleh
+pemateri (lihat LIVE CODING di slide).
 
 ## Setup
 

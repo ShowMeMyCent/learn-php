@@ -17,14 +17,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$host    = '127.0.0.1'; // bukan "localhost" -- hindari masalah socket di Windows
-$db      = 'student_db';
+$host    = getenv('DB_HOST') ?: '127.0.0.1'; // bukan "localhost" -- hindari masalah socket di Windows
+$db      = getenv('DB_NAME') ?: 'student_db';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
-$user = 'root';
-$pass = ''; // sesuaikan dengan setup lokalmu (XAMPP default: kosong)
+$user = getenv('DB_USER') ?: 'root';
+$pass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : ''; // sesuaikan dengan setup lokalmu (XAMPP default: kosong)
 
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,

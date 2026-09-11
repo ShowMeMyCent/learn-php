@@ -5,9 +5,11 @@
 
 ## Data baru: dari form ke tabel
 
-Note: Part ini lebih cepat dari Part 3 — pondasinya (form → $_POST, PDO, prepared statement teaser) sudah dibahas. Fokus di sini murni menyambungkan yang sudah ada ke perintah `INSERT`.
+Note: **🗣️ Ngomong ke Peserta:**
+"Di Part 4 ini kita belajar CREATE: bagaimana data dari form bisa masuk jadi baris baru di tabel MySQL. Alurnya mirip dengan form yang tadi, bedanya sekarang data `$_POST` kita kirim ke query `INSERT`."
 
-Ingatkan singkat: file yang dipakai sekarang `create.php`, terpisah dari `index.php`. Nanti keduanya akan saling terhubung lewat link/redirect.
+**🎯 Poin Kunci di Layar:**
+- File latihan terpisah: `create.php`.
 
 
 
@@ -30,9 +32,11 @@ Diagram siklus CRUD sebagai lingkaran/urutan: Create &rarr; Read &rarr; Update &
 <span class="on">MySQL</span>
 </div>
 
-Note: Sorot bahwa alur ini adalah PERPANJANGAN dari yang sudah dibahas — form dan POST sudah dikuasai sejak Part 2. Yang baru hanya dua hal: apa yang terjadi dengan data setelah `$_POST` diterima (di sini: `INSERT`), dan bagaimana mengeksekusinya dengan aman lewat PDO.
+Note: **🗣️ Ngomong ke Peserta:**
+"Lihat alurnya: Form ngirim data lewat method POST -> ditangkap PHP di `$_POST` -> dijalankan perintah query INSERT -> tersimpan rapi di MySQL. Di tengah-tengah ada kotak 'Validation' yang nanti kita bahas tuntas di Part 9 buat ngecek jangan sampai ada input kosong atau ngawur."
 
-"Validation" muncul di diagram tapi belum dibahas detail — cukup disebut posisinya ada DI ANTARA menerima input dan menjalankan INSERT. Pembahasan penuhnya di Part 9, tapi versi minimal (cek field tidak kosong) akan disentuh sekilas di sini juga.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk kotak INSERT: dari variabel PHP masuk ke database.
 
 
 
@@ -51,9 +55,11 @@ Note: Sorot bahwa alur ini adalah PERPANJANGAN dari yang sudah dibahas — form 
 
 <p class="fineprint">Tidak ada field untuk <code>id</code> &mdash; MySQL yang mengisi otomatis (<code>AUTO_INCREMENT</code>).</p>
 
-Note: Tunjukkan lagi koneksi `name="..."` ke `$_POST['...']`, sudah kali kesekian tapi pengulangan ini yang membuatnya benar-benar tertanam.
+Note: **🗣️ Ngomong ke Peserta:**
+"Ini form `create.php`. Ada input nama, email, dan jurusan. Perhatikan: gak ada input buat `id`. Kenapa? Karena ID itu nomor urut unik yang otomatis dibikin oleh MySQL lewat AUTO_INCREMENT. Jangan pernah bikin input ID manual di form tambah data."
 
-Tekankan eksplisit kenapa TIDAK ADA input untuk `id`: itu tanggung jawab MySQL (`AUTO_INCREMENT PRIMARY KEY` dari `schema.sql`). Kalau peserta mencoba mengisi `id` secara manual, berpotensi bentrok dengan id yang sudah ada — biarkan database yang mengatur.
+**🎯 Poin Kunci di Layar:**
+- Ingatkan kembali: atribut `name="name"` di HTML bakal jadi `$_POST['name']` di PHP.
 
 
 
@@ -78,11 +84,12 @@ Tekankan eksplisit kenapa TIDAK ADA input untuk `id`: itu tanggung jawab MySQL (
 <?php endif; ?>
 ```
 
-Note: Bandingkan dengan `query()` yang dipakai di Part 3: di sana tidak ada input user sama sekali di dalam SQL. Di sini, TIGA nilai berasal langsung dari `$_POST` — inilah momen `prepare()` menjadi WAJIB, bukan pilihan.
+Note: **🗣️ Ngomong ke Peserta:**
+"Perhatikan cara kita menyimpan data ke database. Kita gak pakai `query()`, tapi pakai `prepare()` dan `execute()`. Tanda `:name`, `:email`, `:major` itu namanya placeholder. Query-nya disiapin dulu kerangkanya, baru nilainya disuntikkan lewat array di dalam `execute()`. Ini cara standar industri biar query kita kebal dari hacker dan SQL Injection."
 
-`:name`, `:email`, `:major` disebut *named placeholder* — penanda di dalam SQL yang nanti diisi lewat array di `execute()`. PDO (dengan `EMULATE_PREPARES => false` yang sudah diset di Part 3) mengirim SQL dan nilai-nilai ini SECARA TERPISAH ke MySQL — MySQL yang menggabungkannya dengan aman di sisi server, bukan PHP yang menyambung string.
-
-Jangan jelaskan detail "kenapa ini aman" secara teknis di sini — cukup sebutkan hasilnya dan pindah ke slide berikutnya yang membandingkan langsung dengan cara yang SALAH.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk baris 4: `prepare()` pisahkan perintah SQL dari data user.
+- Tunjuk baris 8: `execute([...])` mengirim data user secara aman.
 
 
 
@@ -114,9 +121,12 @@ $stmt->execute([...]);
 
 <p class="fineprint">Alasan lengkap + demo langsung ada di Part 6 (Security Checkpoint).</p>
 
-Note: Ini sengaja hanya "teaser" — jangan jelaskan detail mekanisme SQL Injection sekarang, itu momennya di Part 6 dengan demo langsung yang jauh lebih berkesan daripada penjelasan abstrak di sini.
+Note: **🗣️ Ngomong ke Peserta:**
+"Lihat kotak merah di atas: ini kesalahan paling sering yang dibuat pemula di tutorial internet lama—variabel `$_POST` ditempel langsung ke dalam string SQL. Jangan pernah tiru cara itu! Nanti di Part 6 kita bakal demokan langsung bagaimana cara merah ini bisa dijebol cuma dengan trik satu baris input. Pokoknya pegang aturan emas ini: ada input dari user? Wajib pakai `prepare()`."
 
-Yang perlu ditekankan sekarang HANYA satu hal praktis: **prepared statement adalah kebiasaan default kita mulai hari ini, bukan sesuatu yang ditambahkan belakangan setelah "versi sederhana" berjalan**. Setiap query yang melibatkan input user — INSERT ini, dan UPDATE/DELETE/search nanti — akan selalu ditulis dengan pola `prepare()` + `execute()` sejak awal.
+**🎯 Poin Kunci di Layar:**
+- Kotak merah: bahaya celah keamanan.
+- Kotak hijau: cara benar dan aman.
 
 
 
@@ -136,9 +146,11 @@ Jurusan: <b>Teknik Komputer</b><br><br>
 
 <p class="fineprint">Cek di <code>index.php</code> &mdash; baris baru muncul di tabel (yang dibuat di Part 3).</p>
 
-Note: Demokan langsung: submit form di `create.php`, lalu buka `index.php` di tab lain untuk membuktikan datanya benar-benar tersimpan — bukan sekadar tampil di halaman `create.php` itu sendiri.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita demokan: kita isi nama Guntur Wibowo di `create.php`, lalu klik Simpan. Pas kita buka tab `index.php` dan refresh, boom! Data Guntur langsung muncul di baris ke-7 tabel kita. Dua halaman yang tadinya terpisah sekarang sudah terhubung lewat database yang sama."
 
-Ini adalah bukti nyata bahwa data melintasi seluruh jalur: form → `$_POST` → `prepare/execute` → MySQL → (lalu di halaman lain) `query/fetchAll` → tabel HTML. Dua Part yang tadinya terasa terpisah (Part 3 dan Part 4) sekarang terbukti terhubung lewat database yang sama.
+**🎯 Poin Kunci di Layar:**
+- Tunjukkan bahwa data yang diinput di create.php otomatis muncul di index.php.
 
 
 
@@ -155,9 +167,11 @@ Ini adalah bukti nyata bahwa data melintasi seluruh jalur: form → `$_POST` →
 
 <p class="fineprint">Ini bukan bug di kode kita. Ini perilaku browser terhadap POST. Solusinya: Part 5.</p>
 
-Note: Biarkan peserta mencoba sendiri refresh setelah submit — ini pengalaman yang jauh lebih efektif daripada dijelaskan lewat kata-kata. Sebagian browser akan menampilkan dialog konfirmasi ("Confirm Form Resubmission"), sebagian lain (terutama kalau memakai `curl`/testing tool) akan langsung mengirim ulang tanpa tanya, menghasilkan data duplikat di tabel.
+Note: **🗣️ Ngomong ke Peserta:**
+"Tapi tunggu dulu... coba setelah kalian submit, tekan tombol F5 (refresh) di browser kalian. Apa yang muncul? Browser bakal nampilin popup: 'Confirm Form Resubmission'. Dan kalau kalian klik Continue, data si Guntur bakal tersimpan dua kali jadi data dobel! Bayangkan kalau ini aplikasi checkout toko online, saldo kalian kepotong dua kali cuma gara-gara refresh halaman. Nah, gimana cara ngatasinnya? Jawabannya ada di Part 5: Post/Redirect/Get."
 
-Jangan langsung kasih solusi. Tanya balik ke kelas: "Menurut kalian kenapa ini terjadi?" — biarkan mereka menghubungkan ke apa yang sudah dipelajari: browser "mengingat" body POST terakhir dan mengirim ulang PERSIS request yang sama saat di-refresh, termasuk data form-nya. Ini jembatan sempurna ke Post/Redirect/Get di Part 5.
+**🎯 Poin Kunci di Layar:**
+- Ciptakan momen penasaran: masalah double-submit akibat refresh halaman POST.
 
 
 
@@ -171,7 +185,11 @@ Jangan langsung kasih solusi. Tanya balik ke kelas: "Menurut kalian kenapa ini t
 
 <p class="downhint">4 slide tambahan: lastInsertId(), named vs positional parameter, rowCount(), ide-ide mencegah double-submit</p>
 
-Note: Rangkum cepat, karena Part 5 langsung menyambung dari masalah yang baru saja ditemukan (double-submit). Jangan beri jeda terlalu lama antara slide ini dan Part 5 — momentumnya penting.
+Note: **🗣️ Ngomong ke Peserta:**
+"Recap singkat CREATE: form ngirim data POST, kita tangkap dan simpan pakai `prepare()` dan `execute()`. Data berhasil masuk, tapi ada penyakit baru: kalau di-refresh datanya dobel. Langsung kita obati penyakit ini di Part 5."
+
+**🎯 Arah Presentasi:**
+- Tekan panah kanan langsung ke Part 5.
 
 
 <p class="part-label">Part 4 · Self-Study</p>

@@ -14,6 +14,7 @@ export const appendExtension = (format: ModuleFormat, name: String): string => {
 
 export default defineConfig({
 	server: {
+		host: true,
 		port: Number(process.env.npm_config_port || 8000),
 	},
 	build: {

@@ -5,9 +5,11 @@
 
 ## READ dulu, sebelum CREATE
 
-Note: Ini Part terpanjang di Core Track — sekitar 28 menit, termasuk menulis koneksi database dari nol (live) dan hands-on kedua. Jaga tempo: jangan lebih dari 1 menit per slide konsep, sisakan waktu untuk live coding.
+Note: **🗣️ Ngomong ke Peserta:**
+"Nah, sekarang kita masuk ke Part 3: PHP ketemu MySQL. Kita bakal bikin fitur READ duluan sebelum CREATE. Kenapa? Biar kalian langsung bisa lihat data muncul di browser secara nyata."
 
-Sebelum mulai: pastikan SEMUA peserta sudah menjalankan `schema.sql` lalu `seed.sql`. Ini seharusnya sudah dipastikan di Opening, tapi cek ulang sekarang — kalau ada yang belum, ini akan memblokir HANDS-ON #2 nanti.
+**🎯 Poin Kunci di Layar:**
+- Pastikan MySQL di XAMPP sudah aktif dan seed data 6 mahasiswa sudah ter-import.
 
 
 
@@ -27,11 +29,11 @@ Sebelum mulai: pastikan SEMUA peserta sudah menjalankan `schema.sql` lalu `seed.
 
 <p class="fineprint">Kita pakai PDO sepanjang sesi ini. Konsisten &mdash; tidak dicampur dengan mysqli.</p>
 
-Note: PDO bukan database itu sendiri — ia adalah lapisan penghubung (mirip driver) yang menerjemahkan perintah PHP menjadi sesuatu yang dipahami MySQL, dan menerjemahkan balik hasil dari MySQL menjadi array PHP yang sudah mereka kenal dari Part 1.
+Note: **🗣️ Ngomong ke Peserta:**
+"Kenapa kita pakai PDO bukan `mysqli`? Anggap PDO ini adapter colokan universal. Hari ini kita pakai MySQL, besok lusa kalau kalian pindah ke PostgreSQL atau SQLite, kodingan PHP kalian hampir gak perlu diubah sama sekali. Selain itu, PDO punya fitur pengamanan query yang jauh lebih rapi dan konsisten."
 
-Kenapa PDO dipilih dibanding `mysqli`: sintaksnya lebih konsisten untuk prepared statement (dibahas beberapa slide lagi), dan kalau suatu saat proyek pindah database (misalnya ke PostgreSQL), sebagian besar kode PDO tidak perlu ditulis ulang — hanya connection string-nya yang berubah. `mysqli` terikat khusus ke MySQL.
-
-Tidak perlu dijelaskan sebagai perdebatan panjang — cukup satu kalimat keputusan, lalu lanjut praktik.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk PDO di tengah: PDO adalah penerjemah antara PHP dan database engine.
 
 
 
@@ -50,15 +52,17 @@ CREATE TABLE students (
 
 <p class="fineprint">6 baris data sudah di-seed. Koneksi PDO akan kita tulis BERSAMA, sekarang.</p>
 
-Note: Ingatkan bahwa starter yang dibagikan sebelum sesi HANYA `schema.sql` dan `seed.sql` — sengaja, supaya proses menulis koneksi database dialami langsung, bukan sekadar "sudah disediakan". Ini bagian yang akan ditulis live di 3 slide berikutnya.
+Note: **🗣️ Ngomong ke Peserta:**
+"Ini struktur tabel `students` yang sudah kita import tadi: ada id, name, email, dan major. Perhatikan: `id` itu AUTO_INCREMENT. Artinya nomor id bakal dibikin otomatis sama MySQL. Kita gak perlu dan gak boleh ngisi id manual saat nambah data nanti."
 
-Sebutkan sekilas: `id INT AUTO_INCREMENT PRIMARY KEY` berarti MySQL yang mengisi angka `id` otomatis — mereka tidak perlu (dan tidak boleh) mengisinya sendiri saat INSERT nanti di Part 4.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk nama-nama kolom (`name`, `email`, `major`). Nama kolom inilah yang jadi key array nanti.
 
 
 
 <p class="part-label">Part 3 · PDO + READ</p>
 
-## <span class="badge badge-hands">Live bareng</span> `config/database.php` — DSN
+## <span class="badge badge-hands">Live Coding</span> `config/database.php` — DSN
 
 ```php [1-2|4-8]
 <?php
@@ -73,17 +77,17 @@ $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
 <p class="fineprint">Pakai <code>127.0.0.1</code>, bukan <code>localhost</code> &mdash; hindari masalah socket di sebagian setup Windows.</p>
 
-Note: Ini bagian LIVE CODING pertama — peserta menonton dulu (bukan hands-on), karena ini konfigurasi yang hanya ditulis sekali dan rawan typo. Ketik perlahan sambil menjelaskan tiap bagian DSN.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang perhatikan ke layar depan. Saya akan mendemokan penulisan file koneksi `config/database.php` dari nol. DSN itu singkatan dari Data Source Name, gampangnya ini 'alamat rumah' database kita. Kenapa kita tulis IP `127.0.0.1` bukan `localhost`? Karena di Windows, kata `localhost` kadang bikin MySQL bingung nyari jalur socket. Pakai `127.0.0.1` itu jaminan aman lewat TCP."
 
-`127.0.0.1` vs `localhost`: keduanya SERING sama-sama berfungsi, tapi di beberapa setup Windows/XAMPP, `localhost` bisa memicu MySQL mencoba koneksi lewat named pipe/socket alih-alih TCP, yang kadang gagal. `127.0.0.1` memaksa koneksi TCP eksplisit — lebih dapat diprediksi untuk keperluan belajar. Ini murni tip praktis, bukan aturan mutlak.
-
-`charset=utf8mb4` disebut lagi di sini karena sudah muncul di `schema.sql` — konsistensi charset antara koneksi dan database penting untuk menghindari karakter aneh/mojibake saat menyimpan nama dengan karakter non-ASCII.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk variabel `$dsn`: gabungan host, nama DB `student_db`, dan charset `utf8mb4`.
 
 
 
 <p class="part-label">Part 3 · PDO + READ</p>
 
-## <span class="badge badge-hands">Live bareng</span> Opsi PDO yang wajib
+## <span class="badge badge-hands">Live Coding</span> Opsi PDO yang wajib
 
 ```php [1-2|4-8|10]
 $user = 'root';
@@ -98,19 +102,20 @@ $options = [
 $pdo = new PDO($dsn, $user, $pass, $options);
 ```
 
-Note: Tiga opsi ini BUKAN sekadar boilerplate untuk dihafal — tiap baris punya alasan konkret, jelaskan satu-satu:
+Note: **🗣️ Ngomong ke Peserta:**
+"Tiga baris opsi ini bukan hafalan kosong, masing-masing ada fungsinya:
+1. `ERRMODE_EXCEPTION`: Biar kalau query kita salah ketik, PHP langsung teriak ngasih pesan error yang jelas, gak diam-diam gagal.
+2. `FETCH_ASSOC`: Biar semua data dari database otomatis jadi Associative Array berlabel nama kolom (`$row['name']`), bukan angka 0, 1, 2.
+3. `EMULATE_PREPARES => false`: Ini senjata rahasia kita buat mencegah SQL Injection nanti di Part 6."
 
-`ERRMODE_EXCEPTION` — tanpa ini, PDO akan GAGAL DIAM-DIAM saat query salah (mengembalikan `false`, bukan error yang jelas). Dengan ini, kesalahan langsung melempar exception yang bisa ditangkap `try/catch` — jauh lebih mudah didebug, terutama untuk pemula yang baru belajar.
-
-`FETCH_ASSOC` — mengatur supaya SETIAP hasil query otomatis berbentuk associative array (`$row['name']`), bukan array bernomor (`$row[0]`) atau gabungan keduanya (default PDO). Ini yang membuat hasil fetch nanti terasa familiar — persis seperti associative array yang dibahas di Part 1.
-
-`EMULATE_PREPARES => false` — ini yang membuat prepared statement (Part 4 dan seterusnya) benar-benar aman dari SQL Injection, karena MySQL sendiri yang memisahkan query dari data, bukan PHP yang mensimulasikannya. Sebutkan ini akan relevan lagi persis di Part 6 (Security) — jangan dibahas panjang sekarang, cukup ditanam sebagai "alasan sudah disiapkan dari awal".
+**🎯 Poin Kunci di Layar:**
+- Tunjuk `$options`: ini konfigurasi standar industri untuk PDO.
 
 
 
 <p class="part-label">Part 3 · PDO + READ</p>
 
-## <span class="badge badge-hands">Live bareng</span> Menangkap kegagalan koneksi
+## <span class="badge badge-hands">Live Coding</span> Menangkap kegagalan koneksi
 
 ```php [1-2|3-5]
 try {
@@ -122,11 +127,11 @@ try {
 
 <p class="filename">config/database.php sekarang lengkap. File lain tinggal <code>require</code> ini.</p>
 
-Note: `try/catch` menangkap `PDOException` yang bisa dilempar `new PDO(...)` kalau host salah, database tidak ada, atau kredensial salah. Tanpa `try/catch`, error PHP mentah akan tampil (dengan detail seperti password di traceback, tergantung setting) — untuk sekarang cukup ditangkap dan ditampilkan pesan sederhana.
+Note: **🗣️ Ngomong ke Peserta:**
+"Kita bungkus koneksinya pakai `try-catch`. Kalau MySQL mati atau password salah, eksekusi langsung berhenti di `die()` dengan pesan yang jelas. Sekarang file `config/database.php` kita sudah beres! File lain nanti tinggal manggil `require 'config/database.php'` dan variabel `$pdo` siap dipakai kapan saja."
 
-`die()` menghentikan eksekusi PHP total, mirip `exit(1)` di C untuk kasus fatal yang tidak bisa dilanjutkan. Kalau koneksi gagal, TIDAK ADA gunanya melanjutkan kode di bawahnya (semua query pasti akan gagal juga), jadi berhenti total adalah keputusan yang tepat di sini — beda dengan validasi input di Part 9 nanti yang harus tetap "lanjut jalan" sambil menampilkan pesan error.
-
-File ini sekarang lengkap dan akan di-`require` dari SEMUA file lain (`index.php`, `create.php`, `edit.php`, `delete.php`) — persis pola `require` yang dibahas di Part 1 self-study.
+**⚠️ Antisipasi Error:**
+- Kalau muncul 'Access denied for user root': cek apakah password MySQL mereka kosong atau ada password-nya.
 
 
 
@@ -141,11 +146,11 @@ File ini sekarang lengkap dan akan di-`require` dari SEMUA file lain (`index.php
 
 <div class="ask"><b>Bentuk <code>$students</code> sekarang:</b> array berisi 6 associative array, satu untuk tiap baris di tabel.</div>
 
-Note: `->query()` mengirim string SQL apa adanya ke MySQL — cocok untuk query TANPA input dari user (seperti ini, `SELECT *` tanpa filter). `->fetchAll()` mengambil SEMUA baris hasil sekaligus dan mengembalikannya sebagai array PHP.
+Note: **🗣️ Ngomong ke Peserta:**
+"Cuma butuh 2 baris buat ngambil seluruh isi database! Baris pertama: sambungin ke DB. Baris kedua: suruh `$pdo` jalanin query SELECT, lalu `fetchAll()` buat narik seluruh barisnya sekaligus ke dalam variabel `$students`. Bentuk `$students` sekarang adalah array isi 6 data mahasiswa."
 
-Gambarkan bentuk data hasilnya di papan: `$students = [ ['id'=>1,'name'=>'Ayu',...], ['id'=>2,'name'=>'Bagas',...], ... ]` — array yang isinya array. Ini PERSIS bentuk data yang dibahas di Part 1 (associative array) digabung dengan konsep "banyak baris" yang mereka kenal dari SQL sebelumnya.
-
-Penting: `query()` HANYA aman dipakai untuk SQL tanpa data dari user. Begitu ada input user yang masuk ke query (search, filter by id, dll), harus pakai `prepare()` — ini akan dibahas eksplisit di Part 4 dan didemokan kenapa penting di Part 6.
+**🎯 Poin Kunci di Layar:**
+- Ingatkan: `query()` cuma boleh dipakai untuk query tanpa input user. Kalau ada filter dari user, wajib pakai `prepare()` (akan dibahas di Part 4).
 
 
 
@@ -174,17 +179,19 @@ Penting: `query()` HANYA aman dipakai untuk SQL tanpa data dari user. Begitu ada
 <span>HTML table</span>
 </div>
 
-Note: Ini gabungan LANGSUNG dari dua konsep Part 1 (associative array + foreach) dengan hasil query Part 3. Kalau ada peserta yang masih ragu di sini, kembali sebentar ke slide foreach di Part 1 — polanya identik, hanya sumber datanya berbeda (array manual → hasil query).
+Note: **🗣️ Ngomong ke Peserta:**
+"Nah, ingat `foreach` dari Part 1 tadi? Sekarang kita kawinkan dengan HTML table! Kita buka `foreach ($students as $s):`, cetak baris `<tr>`, lalu ambil kolomnya: `$s['name']`, `$s['email']`, `$s['major']`, terus tutup pakai `endforeach`. Sintaks titik dua `foreach(...): ... endforeach;` ini gaya khas PHP biar kodingan HTML kita rapi tanpa kurung kurawal bertumpuk."
 
-Perhatikan syntax alternatif `<?php foreach (...): ?> ... <?php endforeach; ?>` — ini bentuk khusus PHP untuk menulis control structure di TENGAH HTML tanpa kurung kurawal bertumpuk yang membingungkan. Fungsinya identik dengan `foreach (...) { ... }`, hanya lebih nyaman dibaca saat bercampur dengan tag HTML seperti ini. Akan dipakai terus sepanjang sesi.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk alur di bawah: MySQL -> fetchAll -> array -> foreach -> HTML table.
 
 
 
 <p class="part-label">Part 3 · PDO + READ</p>
 
-## <span class="badge badge-hands">Ketik bareng #2</span> SELECT &rarr; foreach &rarr; tabel
+## <span class="badge badge-hands">Live Coding #2</span> SELECT &rarr; foreach &rarr; tabel HTML
 
-Buat `index.php`:
+Demonstrasi pembuatan `index.php`:
 
 ```php [1|2|4-12]
 <?php require 'config/database.php'; ?>
@@ -202,13 +209,17 @@ Buat `index.php`:
 </table>
 ```
 
-<p class="fineprint">~10 menit. Target: tabel HTML berisi tepat 6 baris, sesuai seed.sql.</p>
+<p class="fineprint">Live Demo: Pemateri membuat index.php &rarr; query database dijalankan &rarr; 6 data mahasiswa tampil.</p>
 
-Note: Sebelum mulai, tulis di papan checklist yang harus dicapai: (1) `require` koneksi, (2) query SELECT, (3) `foreach` mencetak `<tr>`. Ketiganya sudah dibahas eksplisit di 2 slide sebelumnya — sesi ini murni menggabungkan.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang perhatikan ke layar proyektor. Saya akan mendemokan Live Coding #2: membuat file `index.php`.
+Pertama, kita hubungkan ke file database dengan `require 'config/database.php'`.
+Kedua, kita tarik seluruh data mahasiswa lewat `$pdo->query()->fetchAll()`.
+Ketiga, kita loop array datanya ke baris-baris tabel HTML menggunakan `foreach`.
+Target live demo kita: begitu browser kita refresh, langsung muncul tepat 6 baris data mahasiswa sesuai seed data kita!"
 
-Kegagalan paling umum yang akan muncul di 10 menit ini: (1) lupa `require` sehingga `$pdo` undefined, (2) path `require` salah (relatif terhadap folder mana file dijalankan — ingatkan ini), (3) nama kolom di `$s['...']` tidak cocok dengan nama kolom di database (typo `nama` vs `name`), (4) MySQL belum jalan / kredensial salah di `database.php` sehingga muncul `PDOException` — INI SEBENARNYA BAGUS, tunjukkan bahwa pesan errornya sekarang jelas berkat `try/catch` yang ditulis tadi, bukan halaman putih kosong.
-
-Keliling ruangan, jangan duduk. 10 menit terasa singkat kalau banyak yang stuck di masalah yang sama — kalau begitu, hentikan sebentar dan bahas di depan kelas.
+**🎯 Poin Kunci di Layar:**
+- Tunjukkan alur 3 langkah: require DB -> query fetchAll -> foreach ke tag `<tr>` HTML.
 
 
 
@@ -229,11 +240,13 @@ Keliling ruangan, jangan duduk. 10 menit terasa singkat kalau banyak yang stuck 
 </div>
 </div>
 
-<div class="checkpoint"><b>Berhasil kalau:</b> tabel muncul dengan TEPAT 6 baris data, sama seperti isi <code>seed.sql</code>.</div>
+<div class="checkpoint"><b>Hasil Live Demo:</b> Tabel muncul dengan TEPAT 6 baris data mahasiswa dari database MySQL.</div>
 
-Note: Angka "6" bukan angka sembarang — ini cara verifikasi objektif yang tidak butuh pengajar untuk mengecek satu-satu. Kalau baris kurang dari 6, kemungkinan `WHERE` yang tidak sengaja tertulis atau query salah tabel. Kalau 0 baris tapi tidak error, kemungkinan `seed.sql` belum dijalankan atau dijalankan ke database yang salah.
+Note: **🗣️ Ngomong ke Peserta:**
+"Mantap! Lihat di layar proyektor: begitu di-refresh, langsung muncul tabel 6 baris data seperti ini. Ini adalah pencapaian besar pertama kita: data dari database MySQL berhasil kita tarik dan kita render utuh ke browser lewat PHP!"
 
-Ini closed-loop pertama yang benar-benar melibatkan database — rayakan momen ini sedikit. "Kalian baru saja membuat data mengalir dari MySQL sampai ke browser." Ini pondasi untuk SEMUA yang tersisa hari ini: CREATE, UPDATE, DELETE semuanya akan berakhir dengan pola READ ini untuk menampilkan hasilnya.
+**🎯 Transisi ke CREATE:**
+- "Sekarang kita sudah bisa nampilin data. Tapi gimana caranya user bisa nambahin mahasiswa baru dari web? Kita masuk ke Part 4: CREATE."
 
 
 
@@ -256,9 +269,11 @@ Ini closed-loop pertama yang benar-benar melibatkan database — rayakan momen i
 
 <p class="downhint">7 slide tambahan: fetch vs fetchAll, DSN dibedah, exception PDO, query vs prepare, empty state, LIMIT/OFFSET, struktur project</p>
 
-Note: Pola tiga baris ini (require → query+fetchAll → foreach) akan diulang HAMPIR PERSIS di setiap fitur baca data sepanjang sisa sesi, termasuk fitur search di Part 6 dan form edit di Part 7. Tekankan ini sebagai "rumus" yang sudah mereka kuasai, bukan sesuatu yang perlu dihafal ulang tiap kali.
+Note: **🗣️ Ngomong ke Peserta:**
+"Rumus nampilin data itu cuma 3 langkah: require koneksi, ambil datanya lewat query fetchAll, lalu loop pakai foreach. Rumus ini bakal kita pakai lagi nanti pas bikin fitur pencarian dan edit data. Sekarang kita lanjut bikin form tambah data di Part 4."
 
-Jembatan ke Part 4: "Sekarang kita bisa MEMBACA data yang sudah ada. Pertanyaannya: bagaimana data itu bisa ADA di database sejak awal — selain lewat `seed.sql` yang saya siapkan?" → CREATE.
+**🎯 Arah Presentasi:**
+- Tekan panah kanan ke Part 4.
 
 
 <p class="part-label">Part 3 · Self-Study</p>

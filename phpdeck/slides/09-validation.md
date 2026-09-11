@@ -5,9 +5,11 @@
 
 ## Lubang terakhir yang belum ditutup
 
-Note: Part ini SENGAJA dipadatkan (sekitar 14 menit) — bukan karena tidak penting, tapi karena polanya cukup mudah dipahami setelah Part 6-8, dan waktu tersisa perlu dijaga untuk briefing capstone yang menentukan hasil belajar mandiri peserta setelah sesi.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita masuk ke Part 9: Validasi Input. CRUD kita memang sudah kebal dari SQL Injection dan XSS, tapi kita belum menolak data aneh: misalnya nama cuma spasi, atau email gak pakai tanda @. Di sinilah validasi server-side berperan."
 
-Sampaikan di awal: "CRUD kita sudah AMAN dari serangan (Part 6), tapi belum MENOLAK data yang aneh — nama kosong, email tanpa @, dst. Itu beda masalah, dan itu Part ini."
+**🎯 Poin Kunci di Layar:**
+- Alur ringkas: fokus pada prinsip server-side validation.
 
 
 
@@ -27,9 +29,14 @@ Diagram: browser dengan validasi HTML dicoret/dilewati dengan panah langsung ke 
 <i>Cari: "client side vs server side validation bypass diagram"</i>
 </div>
 
-Note: **Jawaban:** validasi HTML (`required`, `type="email"`, dsb) berjalan di BROWSER — dan browser sepenuhnya dikendalikan oleh user. Siapa pun bisa mengirim request POST langsung ke `create.php` TANPA lewat form sama sekali — pakai `curl`, Postman, atau bahkan mengubah/menghapus atribut `required` lewat DevTools sebelum submit.
+Note: **🗣️ Ngomong ke Peserta:**
+"Coba saya tanya: di HTML kan sudah ada atribut `required` dan `type=\"email\"`. Kenapa kita masih capek-capek bikin validasi lagi di PHP?
+Jawabannya: karena HTML itu jalan di browser user!
+User bisa klik kanan -> Inspect Element -> hapus kata `required` dalam 2 detik. Atau mereka bisa nembak data langsung pakai Postman tanpa buka form kita sama sekali.
+Atribut di HTML itu cuma buat kenyamanan user (UX). Tapi satpam sesungguhnya yang menentukan data boleh masuk ke database atau tidak adalah **PHP di sisi server**."
 
-Validasi client-side (HTML/JavaScript) itu berguna — untuk UX, memberi feedback instan tanpa menunggu round-trip ke server. Tapi ia HANYA lapisan kenyamanan, bukan lapisan keamanan. **Validasi yang benar-benar menentukan apakah data boleh masuk database harus selalu berjalan di server**, karena server adalah satu-satunya pihak yang bisa dipercaya mengeksekusi aturan itu tanpa bisa dilewati.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk diagram bypass: client-side bisa dimatikan, server-side adalah benteng mutlak.
 
 
 
@@ -52,11 +59,14 @@ Validasi client-side (HTML/JavaScript) itu berguna — untuk UX, memberi feedbac
 <?php endif; ?>
 ```
 
-Note: Pola intinya: siapkan array `$errors` KOSONG, isi dengan pesan setiap kali aturan dilanggar, lalu SEBELUM melakukan `INSERT`, cek `empty($errors)` — kalau masih ada isinya, JANGAN simpan ke database sama sekali.
+Note: **🗣️ Ngomong ke Peserta:**
+"Polanya gampang banget:
+1. Kita siapkan array kosong `$errors = []`.
+2. Setiap kali ada input yang salah atau kosong, kita tambahkan pesan ke array itu: `$errors[] = 'Nama wajib diisi'`.
+3. Terakhir, kita cek pakai `if (empty($errors))`. Kalau array error-nya beneran kosong, baru jalankan INSERT! Kalau masih ada isinya, jangan sentuh database sama sekali."
 
-Ini alasan kenapa `$errors[]` dikumpulkan SEMUA dulu, bukan langsung `die()` di error pertama yang ditemukan — supaya user bisa melihat SEMUA masalah sekaligus (nama kosong DAN email salah format, misalnya), bukan harus submit berkali-kali menemukan satu error setiap kali.
-
-`empty($_POST['name'])` sudah dibahas di Part 1 self-study — kembali dipakai di sini, penerapan langsung.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk `$errors[]`: kumpulkan semua error sekaligus, jangan matikan program di error pertama agar user tahu semua kesalahannya.
 
 
 
@@ -70,13 +80,15 @@ if ($name === '') $errors[] = 'Nama wajib diisi.';
 
 if (strlen($name) > 100) $errors[] = 'Nama maksimal 100 karakter.';
 // cocok dengan VARCHAR(100) di schema.sql
-
-if (strlen($name) < 2) $errors[] = 'Nama terlalu pendek.';
 ```
 
-Note: `trim()` menghapus spasi di awal/akhir SEBELUM validasi — tanpa ini, input yang hanya berisi spasi (`"   "`) akan lolos cek `empty()` (karena string berisi spasi TIDAK dianggap kosong oleh `empty()`), padahal secara makna itu sama saja dengan kosong.
+Note: **🗣️ Ngomong ke Peserta:**
+"Jangan lupa pasang fungsi `trim()`. Kenapa? Karena kalau ada user iseng yang cuma ngetik spasi 5 kali, tanpa `trim()` spasi itu dianggap ada isinya! `trim()` membuang spasi kosong di depan dan belakang.
+Selain itu, kita batasi panjang karakter maksimal 100 huruf. Kenapa angka 100? Karena di tabel database MySQL tadi, kolom `name` kita set `VARCHAR(100)`. Jadi aturan di PHP harus sinkron dengan aturan di database."
 
-Batas panjang (`strlen($name) > 100`) bukan aturan sembarangan — ini SENGAJA disamakan dengan `VARCHAR(100)` di `schema.sql` dari Part 3. Kalau validasi PHP tidak selaras dengan batas kolom database, data yang lolos validasi PHP tapi melebihi batas kolom akan menyebabkan error database yang membingungkan (atau di beberapa konfigurasi MySQL, data dipotong diam-diam tanpa pemberitahuan) — koordinasi antara validasi aplikasi dan constraint database itu penting.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk `trim()`: cegah input iseng berisi spasi doang.
+- Tunjuk `VARCHAR(100)`: sinkronkan batas string dengan skema DB.
 
 
 
@@ -94,9 +106,12 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 <p class="fineprint"><code>filter_var()</code> &mdash; function bawaan PHP untuk validasi/sanitasi berbagai jenis data.</p>
 
-Note: `filter_var($nilai, FILTER_VALIDATE_EMAIL)` adalah cara PHP bawaan memvalidasi format email — mengembalikan alamat email itu sendiri kalau valid, atau `false` kalau tidak. Jauh lebih andal daripada mencoba menulis sendiri regex untuk validasi email (yang ternyata jauh lebih rumit dari yang terlihat — standar format email punya banyak kasus tepi).
+Note: **🗣️ Ngomong ke Peserta:**
+"Buat ngecek format email, kalian gak perlu bikin rumus Regex aneh-aneh yang bikin pusing. PHP sudah menyediakan fungsi bawaan: `filter_var($email, FILTER_VALIDATE_EMAIL)`.
+Fungsi ini otomatis ngecek apakah formatnya beneran email standar yang ada tanda @ dan nama domainnya."
 
-Ini BUKAN validasi bahwa email tersebut BENAR-BENAR ada dan aktif (misalnya `budi@tidakada.xyz` bisa lolos validasi format meski domainnya tidak nyata) — hanya memastikan STRUKTURNYA sesuai format email yang valid (ada `@`, ada domain, dst). Verifikasi bahwa email benar-benar aktif adalah topik lain (biasanya lewat kirim email konfirmasi), di luar cakupan hari ini.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk `FILTER_VALIDATE_EMAIL`: alat standar bawaan PHP.
 
 
 
@@ -116,9 +131,13 @@ Ini BUKAN validasi bahwa email tersebut BENAR-BENAR ada dan aktif (misalnya `bud
 <!-- input diisi ULANG dengan apa yang tadi diketik user -->
 ```
 
-Note: Dua hal digabung di sini. Pertama, menampilkan daftar error — pola `foreach` yang SAMA seperti mencetak baris tabel di Part 3, hanya sumber datanya array `$errors`, bukan hasil query. Dan `htmlspecialchars($e)` dipakai lagi (Part 6) karena pesan error, meski kita yang menulis teksnya, tetap praktik baik untuk selalu escape output.
+Note: **🗣️ Ngomong ke Peserta:**
+"Ada 2 hal penting di slide ini:
+Pertama: kalau ada error, kita loop array `$errors` di atas form biar user bisa baca apa saja yang salah.
+Kedua (ini penting banget buat kenyamanan user): di tag `<input>`, atribut `value` kita isi ulang dengan `$_POST['name']`. Tujuannya apa? Supaya kalau user salah ketik email, nama dan jurusan yang sudah dia ketik panjang-panjang gak hilang terhapus! Jangan bikin user emosi karena harus ngetik ulang semuanya dari awal."
 
-Kedua, dan ini yang sering dilewatkan pemula: `value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"` mengisi ULANG field dengan apa yang SEBELUMNYA diketik user, supaya kalau validasi gagal (misalnya email salah format), user TIDAK PERLU mengetik ulang SEMUA field dari awal — hanya perlu memperbaiki yang salah. Ini disebut "old input retention", dan `htmlspecialchars()` di sini WAJIB, persis alasan yang sama seperti value attribute di form edit Part 7 — kalau tidak, input yang mengandung tanda kutip bisa merusak HTML form ini sendiri.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk baris 8: old input retention (`value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"`).
 
 
 
@@ -137,9 +156,15 @@ Kedua, dan ini yang sering dilewatkan pemula: `value="<?= htmlspecialchars($_POS
 
 <p class="downhint">6 slide tambahan: katalog filter_var, whitelist major, UNIQUE email, error per-field, form reusable, CSRF sekilas</p>
 
-Note: Ini penutup Part 9 sekaligus rangkuman untuk SELURUH sesi keamanan/kualitas data. Ketiga baris tabel ini sebaiknya benar-benar melekat sebagai "tiga pertanyaan wajib" setiap kali menulis fitur backend baru: apakah query ini pakai prepared statement? Apakah output ini di-escape? Apakah input ini divalidasi?
+Note: **🗣️ Ngomong ke Peserta:**
+"Ini rangkuman Trio Pertahanan Backend:
+1. Di lapisan Query: pakai `prepare()` + `execute()` biar aman dari SQL Injection.
+2. Di lapisan Output: bungkus `htmlspecialchars()` biar aman dari XSS.
+3. Di lapisan Input: pakai `$errors[]` dan `filter_var()` biar data bersih dan masuk akal.
+Tiga pilar ini yang wajib kalian terapkan di Capstone Project kita sekarang!"
 
-Jembatan langsung ke Part 10: "Sekarang kalian punya semua alat untuk membangun CRUD sendiri, dari nol, tanpa dituntun. Itu ujian sesungguhnya — dan itu capstone kalian."
+**🎯 Transisi ke Part 10 (Capstone):**
+- Tekan panah kanan ke Part 10.
 
 
 <p class="part-label">Part 9 · Self-Study</p>

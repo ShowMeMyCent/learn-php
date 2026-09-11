@@ -1,0 +1,76 @@
+name: learn-php
+
+services:
+  # 1. Reveal.js Presentation Deck (Vite Dev Server)
+  slides:
+    build:
+      context: .
+      dockerfile: Dockerfile.slides
+    container_name: learn-php-slides
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+  # 2. PHP Backend (Student Management System & Hands-on)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: learn-php-backend
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    environment:
+      DB_HOST: db
+      DB_NAME: student_db
+      DB_USER: root
+      DB_PASS: secret
+      DOCROOT: phpdeck/project
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # 3. MySQL Database (Auto-initialized with schema.sql and seed.sql)
+  db:
+    image: mysql:8.0
+    container_name: learn-php-db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: student_db
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./phpdeck/starter/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./phpdeck/starter/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-psecret"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  # 4. phpMyAdmin (Web GUI Database Management)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: learn-php-pma
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: secret
+    depends_on:
+      - db
+
+volumes:
+  db_data:

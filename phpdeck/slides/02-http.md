@@ -5,9 +5,11 @@
 
 ## Bagaimana data benar-benar berpindah
 
-Note: Ini bagian paling fundamental dari seluruh sesi. Sebelum bicara database sama sekali, peserta harus paham: bagaimana caranya sebuah isian di form HTML bisa "sampai" ke variable PHP?
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita masuk ke bagian paling seru: bagaimana isian form di HTML bisa nyebrang dan sampai ke variabel PHP? Banyak orang mengira form dan PHP itu otomatis nyambung karena sihir. Padahal jalurnya murni lewat HTTP request."
 
-Banyak peserta pemula membayangkan form "langsung terhubung" ke PHP, semacam sihir. Tujuan Part ini adalah membongkar sihir itu jadi mekanisme konkret: HTTP request.
+**🎯 Poin Kunci di Layar:**
+- Fokus ke perpindahan data dari browser (klien) ke server.
 
 
 
@@ -44,9 +46,11 @@ Server bisa melayani ribuan user.
 </div>
 </div>
 
-Note: Tarik paralel eksplisit: `scanf()` di C menunggu input dari terminal yang sama. PHP tidak pernah "menunggu" seperti itu — PHP hanya membaca apa yang SUDAH dikirim browser di dalam HTTP request, memprosesnya, lalu selesai. Tidak ada dialog interaktif seperti CLI.
+Note: **🗣️ Ngomong ke Peserta:**
+"Di C kemarin, program kalian nungguin ketikan keyboard lewat `scanf()`. Di PHP gak ada `scanf()`. Server PHP gak pernah nungguin user ngetik. Dia cuma ngebaca data yang sudah terlanjur dikirim oleh browser lewat paket HTTP Request, lalu diproses secepat mungkin, dibalas, dan selesai. Makanya satu server PHP bisa melayani ribuan orang sekaligus tanpa macet."
 
-Ini juga jawaban kenapa satu server PHP bisa melayani banyak orang sekaligus: setiap request independen, tidak ada proses yang "menunggu" user tertentu mengetik.
+**🎯 Poin Kunci di Layar:**
+- Bandingkan: `scanf` nunggu di terminal vs HTTP request jalan independen.
 
 
 
@@ -67,9 +71,11 @@ Diagram membandingkan GET (data di URL, terlihat di address bar, contoh <code>?i
 <tr><td>Dipakai untuk</td><td>membaca / filter / search</td><td>kirim / ubah / hapus data</td></tr>
 </table>
 
-Note: Aturan praktis yang akan mereka pakai terus sepanjang sesi: **GET untuk membaca data, POST untuk mengubah data (create/update/delete)**. Ini bukan aturan mutlak dari sisi teknis — secara teknis form apapun BISA pakai GET — tapi ini konvensi yang penting untuk keamanan dan perilaku browser yang benar (nanti dijelaskan kenapa, di Part 5 dan Part 8: delete lewat GET itu berbahaya).
+Note: **🗣️ Ngomong ke Peserta:**
+"Bedanya GET dan POST apa? Sederhana: GET naruh data di URL, kelihatan di address bar. Bagus buat fitur pencarian atau filter karena halamannya bisa di-bookmark atau dibagikan ke teman. Tapi kalau aksinya mengubah data—seperti nambah mahasiswa, ngedit, atau hapus—wajib pakai POST! Di POST, datanya dibungkus di badan request, gak kelihatan di URL, dan gak bakal dipicu sembarangan oleh browser."
 
-Contoh konkret: mengetik kata kunci pencarian → GET (`index.php?q=budi`), karena boleh di-bookmark, boleh di-refresh berkali-kali tanpa efek samping. Menyimpan data siswa baru → POST, karena refresh setelah POST akan mengirim ulang data (masalah yang akan mereka lihat sendiri sebentar lagi di HANDS-ON #1, dan solusinya di Part 5).
+**🎯 Poin Kunci di Layar:**
+- Tunjuk aturan praktis di baris terakhir: GET untuk baca, POST untuk ubah/hapus.
 
 
 
@@ -87,11 +93,11 @@ Contoh konkret: mengetik kata kunci pencarian → GET (`index.php?q=budi`), kare
 
 <div class="ask"><b>Perhatikan:</b> atribut <code>name="nama"</code> BUKAN sekadar label. Itu akan jadi KUNCI array di sisi PHP.</div>
 
-Note: Ini titik sambung paling penting antara HTML yang sudah mereka kuasai dan PHP yang baru. Atribut `name` pada `<input>` sudah mereka tulis berkali-kali sebelumnya (mungkin tanpa tahu fungsinya kalau belum pernah bikin backend) — sekarang jelaskan: nilai atribut inilah yang akan jadi KUNCI di associative array `$_POST` atau `$_GET`.
+Note: **🗣️ Ngomong ke Peserta:**
+"Di HTML kalian pasti sudah sering nulis `<input type=\"text\" name=\"nama\">`. Nah, atribut `name` ini bukan cuma label pajangan. Nilai di dalam `name` inilah yang bakal jadi KUNCI kurung siku di PHP nanti. Kalau di HTML namanya `name=\"nama\"`, di PHP manggilnya `$_POST['nama']`. Kalau di HTML namanya `name=\"jurusan\"`, di PHP ya `$_POST['jurusan']`. Jangan sampai di HTML pakai bahasa Indo tapi di PHP dipanggil bahasa Inggris."
 
-Tulis di papan/slide: `name="nama"` di HTML → `$_POST['nama']` di PHP. Kalau atributnya `name="jurusan"`, maka PHP-nya `$_POST['jurusan']`. Ini koneksi langsung ke slide associative array di Part 1 — sekarang mereka lihat DARI MANA array itu berasal.
-
-`action="proses.php"` menentukan file PHP mana yang akan menerima request ini. Kalau kosong, form mengirim ke dirinya sendiri (dipakai nanti di HANDS-ON #1).
+**🎯 Poin Kunci di Layar:**
+- Tunjuk atribut `name="nama"` lalu hubungkan dengan `$_POST['nama']`.
 
 
 
@@ -110,9 +116,11 @@ $jurusan = $_POST['jurusan'];
 
 <p class="fineprint"><code>$_POST</code> hanya terisi kalau form dikirim dengan <code>method="POST"</code>. <code>$_GET</code> untuk <code>method="GET"</code> atau parameter di URL.</p>
 
-Note: Tekankan lagi: `$_POST` adalah associative array biasa, PERSIS seperti yang dibahas di Part 1. Tidak ada sintaks baru untuk dipelajari di sini — hanya nama variable baru yang sudah otomatis diisi PHP.
+Note: **🗣️ Ngomong ke Peserta:**
+"Lihat kodenya: `$_POST` itu sebenarnya Associative Array biasa yang sudah otomatis disediain sama PHP. Isinya langsung diambil dari input form. Gak ada sintaks aneh-aneh. Kalau form-nya dikirim pakai method POST, datanya masuk ke `$_POST`. Tapi ingat: kalau di form kalian lupa nulis `method=\"POST\"`, HTML bakal default kirim pakai GET, dan `$_POST` kalian bakal kosong melompong."
 
-Ingatkan potensi error umum: kalau mencoba `$_POST['nama']` padahal form dikirim dengan `method="GET"`, akan muncul "Undefined array key" karena datanya ada di `$_GET`, bukan `$_POST`. Ini persis error yang mungkin akan mereka temui sendiri di HANDS-ON #1 — jangan buru-buru dijawab sekarang, biarkan mereka menemukannya sendiri nanti agar lebih nempel.
+**⚠️ Antisipasi Error:**
+- Muncul 'Undefined array key': artinya form dikirim pakai GET, atau nama key di array beda huruf kapital/bahasa dari form HTML.
 
 
 
@@ -131,22 +139,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <p class="fineprint">Ingat <code>===</code> dari Part 1? Di sinilah gunanya.</p>
 
-Note: Kenapa guard ini penting: satu file PHP yang sama sering menampilkan FORM (saat pertama dibuka, request GET) dan MEMPROSES form itu (saat disubmit, request POST). Tanpa guard ini, PHP akan mencoba membaca `$_POST['nama']` bahkan saat halaman baru dibuka dan belum ada data dikirim — hasilnya error "Undefined array key nama".
+Note: **🗣️ Ngomong ke Peserta:**
+"Kenapa kita butuh baris `if ($_SERVER['REQUEST_METHOD'] === 'POST')`? Karena saat user baru pertama kali buka halaman web, browser itu ngirim request GET biasa. Belum ada tombol submit yang dipencet! Kalau gak kita pasang satpam (guard) ini, PHP bakal langsung nyari `$_POST['nama']` yang belum ada, dan browser langsung keluar warning error merah. Dengan if ini, PHP cuma jalanin kode pemrosesan pas tombol submit beneran diklik."
 
-`$_SERVER['REQUEST_METHOD']` adalah salah satu isi dari superglobal `$_SERVER` yang disebut sekilas di Part 1 — sekarang mereka lihat kegunaan konkretnya: mengetahui APA JENIS request yang sedang diproses.
-
-Pola if-guard ini akan muncul lagi persis sama di `create.php` dan `edit.php` nanti.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk baris 2: ini penjaga gerbang standar di setiap pemrosesan form PHP.
 
 
 
 <p class="part-label">Part 2 · PHP, HTML &amp; HTTP</p>
 
-## <span class="badge badge-hands">Ketik bareng #1</span> Form &rarr; `$_POST`
+## <span class="badge badge-hands">Live Coding #1</span> Form &rarr; `$_POST`
 
-Buat `hello_form.php`, lengkapi TODO:
+Struktur `hello_form.php`:
 
 ```php [1-2|4-8]
-<!-- Form sudah tersedia, lengkapi bagian PHP -->
+<!-- Form HTML mengirim request POST -->
 <form method="POST">
     <input type="text" name="nama" placeholder="Nama kamu">
     <input type="text" name="jurusan" placeholder="Jurusan">
@@ -154,19 +162,22 @@ Buat `hello_form.php`, lengkapi TODO:
 </form>
 
 <?php
-// TODO: cek jika method POST, ambil $_POST['nama'] & $_POST['jurusan']
-// TODO: echo "Halo, <nama>! Jurusan <jurusan>."
-// TODO: var_dump($_POST) di baris terakhir
+// Pemrosesan di sisi server:
+// 1. Cek jika method POST, ambil $_POST['nama'] & $_POST['jurusan']
+// 2. Tampilkan sapaan: "Halo, <nama>! Jurusan <jurusan>."
+// 3. Inspeksi isi request dengan var_dump($_POST)
 ?>
 ```
 
-<p class="fineprint">~8 menit. Target: isi form &rarr; submit &rarr; muncul sapaan + var_dump.</p>
+<p class="fineprint">Live Demo: Pemateri mendemokan pengiriman form &rarr; data masuk ke <code>$_POST</code> &rarr; direspons server.</p>
 
-Note: Sebelum peserta mulai, tulis ketiga TODO di papan sebagai checklist. Jangan didikte baris demi baris — biarkan mereka menyusun sendiri dari pola yang sudah dibahas 3 slide sebelumnya (if guard + `$_POST['key']` + echo).
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang perhatikan baik-baik ke layar depan. Saya akan mendemokan Live Coding #1. Kita akan buat satu file bernama `hello_form.php`. Di atasnya ada form HTML dengan method POST, dan di bawahnya kita tulis kode PHP untuk menangkap data yang dikirim user.
+Perhatikan baris cek method POST: ini satpam pertama kita. Kalau user submit form, PHP membaca `$_POST['nama']` dan `$_POST['jurusan']`, lalu langsung mencetaknya kembali ke browser."
 
-Selama 8 menit ini, keliling ruangan. Kesalahan paling umum yang akan muncul: (1) lupa `method="POST"` di form sehingga tetap GET, (2) attribute `name` di HTML tidak cocok dengan key yang dipakai di `$_POST[...]`, (3) lupa if-guard sehingga error saat halaman pertama dibuka.
-
-Jangan perbaiki langsung — tanyakan "coba var_dump($_POST), isinya apa?" supaya mereka belajar mendiagnosis sendiri lewat alat yang baru saja dipelajari.
+**🎯 Poin Kunci di Layar:**
+- Tunjukkan atribut `method="POST"` di form HTML.
+- Tunjukkan bagaimana data input otomatis masuk ke superglobal `$_POST`.
 
 
 
@@ -187,13 +198,16 @@ Jangan perbaiki langsung — tanyakan "coba var_dump($_POST), isinya apa?" supay
 </div>
 </div>
 
-<div class="checkpoint"><b>Berhasil kalau:</b> sapaan muncul DAN <code>var_dump</code> menunjukkan array dengan key <code>nama</code> &amp; <code>jurusan</code> berisi teks yang kamu ketik.</div>
+<div class="checkpoint"><b>Hasil Live Demo:</b> Sapaan muncul DAN <code>var_dump</code> menunjukkan array dengan key <code>nama</code> &amp; <code>jurusan</code> berisi data yang dikirim dari form.</div>
 
-Note: Minta 2-3 peserta secara acak menunjukkan layar mereka lewat share screen atau maju ke depan sebentar — bukan untuk menilai, tapi supaya seluruh kelas kalibrasi "seperti inilah tampilan sukses".
+Note: **🗣️ Ngomong ke Peserta:**
+"Bisa kita lihat hasilnya di layar: saat form disubmit dengan nama 'Ayu' dan jurusan 'Informatika', PHP langsung memproses dan menampilkan sapaan serta isi array `var_dump`.
+Inilah jembatan pertama kita: form HTML berhasil mengirim data ke memori PHP di sisi server.
+Tapi ingat: begitu response HTML ini selesai dikirim ke browser, data di variabel PHP ini langsung hilang dan mati!
+Lalu bagaimana caranya agar data ini tidak hilang dan tersimpan selamanya? Kita butuh database! Mari kita masuk ke Part 3: PDO dan MySQL."
 
-Kalau ada yang array-nya kosong (`array(0) {}`), itu tandanya `REQUEST_METHOD` bukan POST — cek atribut `method` di tag form. Ini failure mode paling umum, siapkan jawaban ini di kepala sebelum sesi dimulai.
-
-Setelah debrief singkat (60 detik), langsung sambungkan ke slide berikutnya: "Data sudah sampai ke PHP. Sekarang — bagaimana caranya data ini masuk ke DATABASE, dan bagaimana data yang SUDAH ADA di database ditampilkan?"
+**🎯 Transisi ke Database:**
+- "Data dari user sudah berhasil masuk ke PHP. Sekarang pertanyaannya: gimana cara nyimpen data ini ke MySQL dan nampilin ulang ke layar? Kita masuk ke Part 3."
 
 
 
@@ -214,9 +228,11 @@ Setelah debrief singkat (60 detik), langsung sambungkan ke slide berikutnya: "Da
 
 <p class="downhint">6 slide tambahan: $_SERVER, GET-search vs POST-mutasi, isset/??, redirect dasar, status code, trace 1 form utuh</p>
 
-Note: Sorot diagram ini dan tunjukkan secara eksplisit bahwa mereka baru saja menguasai tiga simpul pertama dari mental model yang ditunjukkan di Opening. Ini penting secara psikologis — peserta perlu tahu progres mereka, bukan hanya "materi berikutnya".
+Note: **🗣️ Ngomong ke Peserta:**
+"Lihat diagram ini: 3 panah pertama sudah beres kita taklukkan. Browser ngirim data lewat HTTP, diterima sama PHP. Sekarang kita lanjut ke panah berikutnya: menghubungkan PHP ke database MySQL."
 
-Kalau waktu berjalan sesuai jadwal (menit ke-40), lanjut langsung ke Part 3. Kalau tertinggal, ini titik pemangkasan paling aman: percepat slide "GET vs POST" dan "recap" tanpa mengurangi hands-on.
+**🎯 Arah Presentasi:**
+- Lanjut tekan panah kanan ke Part 3.
 
 
 <p class="part-label">Part 2 · Self-Study</p>

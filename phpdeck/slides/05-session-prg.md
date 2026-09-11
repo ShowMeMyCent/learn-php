@@ -5,9 +5,11 @@
 
 ## Menyelesaikan masalah double-submit
 
-Note: Part ini langsung melanjutkan masalah yang BARU SAJA ditemukan sendiri oleh peserta di akhir Part 4 (refresh setelah submit = data dobel). Momentumnya penting — jangan beri jeda panjang, langsung sambungkan.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita selesaikan penyakit double-submit yang baru saja kita temukan. Solusinya adalah jurus klasik di web development bernama **Post/Redirect/Get (PRG)**."
 
-Part ini relatif singkat (~22 menit) karena masalahnya sudah dipahami dari pengalaman langsung, bukan dijelaskan dari nol.
+**🎯 Poin Kunci di Layar:**
+- PRG adalah pola standar industri untuk menangani mutasi data form.
 
 
 
@@ -25,9 +27,11 @@ Part ini relatif singkat (~22 menit) karena masalahnya sudah dipahami dari penga
 <span>Tekan F5 &rarr; browser kirim ULANG POST yang sama</span>
 </div>
 
-Note: Ini penjelasan MENGAPA di balik apa yang mereka alami sendiri di akhir Part 4. Browser, secara desain, "mengingat" request terakhir untuk keperluan refresh — untuk GET ini tidak masalah (request GET seharusnya tidak mengubah apa pun, sudah dibahas di Part 2). Untuk POST, mengulang request berarti mengulang AKSI-nya juga — dalam kasus ini, INSERT lagi.
+Note: **🗣️ Ngomong ke Peserta:**
+"Kenapa bisa datanya dobel pas di-refresh? Sederhana: browser itu selalu mengingat request TERAKHIR yang dia kirim. Kalau setelah INSERT kita langsung bales pakai teks HTML, browser bakal nginget bahwa dia baru saja ngirim paket POST. Pas user pencet F5, browser ngirim ulang paket POST itu ke server. Server kita yang polos ya nge-INSERT data itu lagi."
 
-Ini bukan bug PHP, bukan bug MySQL, bukan bug kode kita. Ini adalah perilaku standar HTTP/browser yang harus kita TANGANI secara sengaja di sisi server.
+**🎯 Poin Kunci di Layar:**
+- Tekankan: Ini bukan error kode kita, tapi cara kerja bawaan browser terhadap request POST.
 
 
 
@@ -48,11 +52,13 @@ header('Location: index.php');
 exit;
 ```
 
-Note: Pola PRG: setelah POST selesai memproses (INSERT/UPDATE/DELETE), server TIDAK langsung mengirim HTML hasil — server mengirim instruksi REDIRECT ke browser ("pergi ke `index.php`"), dan browser melakukan request BARU dengan method GET ke sana.
+Note: **🗣️ Ngomong ke Peserta:**
+"Solusinya pakai jurus 3 langkah: Post -> Redirect -> Get.
+Begitu data selesai di-INSERT, kita JANGAN balas pakai HTML. Kita suruh browser pindah halaman pakai perintah `header('Location: index.php')` lalu pasang `exit;`.
+Browser bakal langsung otomatis melakukan request baru dengan method GET ke `index.php`. Sekarang, request terakhir yang diingat browser adalah GET, bukan POST. Kalau user refresh 1000 kali pun, datanya gak bakal pernah dobel lagi!"
 
-Sekarang kalau user menekan refresh, yang diulang adalah GET terakhir (menampilkan `index.php`) — bukan POST ke `create.php`. Refresh jadi aman, tidak ada lagi data dobel. Ini "sihir" sederhana: browser hanya mengingat request TERAKHIR, jadi kita pastikan request terakhir yang tercatat selalu berupa GET yang aman diulang.
-
-`exit;` setelah `header()` sudah disinggung di Part 2 self-study — sekarang jelaskan alasannya lebih konkret: tanpa `exit;`, kode PHP setelahnya (kalau ada) akan TETAP berjalan di server meski browser sudah diberi tahu untuk pindah, berpotensi menyebabkan efek samping ganda yang tidak terlihat.
+**⚠️ Catatan Penting:**
+- Tunjuk baris `exit;`: ingatkan bahwa `header()` gak otomatis menghentikan PHP. Wajib pasang `exit;` biar kode di bawahnya gak lanjut jalan diam-diam.
 
 
 
@@ -70,11 +76,12 @@ $_SESSION['flash'] = 'Data siswa berhasil ditambahkan.';
 
 <p class="fineprint"><code>$_SESSION</code> &mdash; associative array yang BERTAHAN antar-request. Berbeda dari variable PHP biasa.</p>
 
-Note: Ingat model mental Part 1: setiap request PHP "lahir baru", variable biasa tidak bertahan ke request berikutnya. `$_SESSION` adalah PENGECUALIAN yang disengaja — PHP menyimpan datanya di server (biasanya file sementara) dan mengaitkannya ke browser tertentu lewat cookie, sehingga data ini BISA dibaca lagi di request selanjutnya, termasuk setelah redirect.
+Note: **🗣️ Ngomong ke Peserta:**
+"Nah, tapi muncul masalah baru: kalau kita langsung redirect, user taunya dari mana kalau datanya beneran sukses tersimpan? Padahal PHP itu pelupa kan? Variabel biasa langsung hilang begitu redirect.
+Di sinilah kita panggil **Session**. `$_SESSION` itu brankas penyimpanan sementara di server yang bisa nyebrang antar-halaman. Kita titipkan pesan sukses di `$_SESSION['flash']` sebelum redirect."
 
-`session_start()` WAJIB dipanggil di SETIAP file yang ingin membaca atau menulis `$_SESSION`, dan harus di baris PALING ATAS sebelum ada output HTML apa pun (aturan yang sama seperti `header()` di Part 2) — kalau tidak, akan muncul error "headers already sent" atau session tidak berfungsi.
-
-`'flash'` adalah nama kunci yang kita pilih sendiri, bukan kata kunci bawaan PHP — istilah "flash message" berarti pesan yang tampil SEKALI lalu hilang, akan diimplementasikan di slide berikutnya.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk baris 1: `session_start()` wajib ditaruh paling atas sebelum ada output HTML atau spasi kosong apapun.
 
 
 
@@ -95,11 +102,11 @@ session_start();
 
 <p class="filename">Ditaruh di bagian atas index.php, sebelum tabel data.</p>
 
-Note: Pola ini disebut "flash message" karena tampil SEKALI seperti kilatan (flash), lalu otomatis hilang di kunjungan berikutnya — `unset()` menghapus key `'flash'` dari `$_SESSION` SEGERA setelah ditampilkan, supaya kalau user refresh halaman `index.php` ini, pesan tidak muncul lagi berulang-ulang.
+Note: **🗣️ Ngomong ke Peserta:**
+"Kenapa dinamai 'Flash Message'? Karena kayak kilatan blitz kamera: muncul sekali, terus hilang selamanya. Di file `index.php`, kita cek: ada gak titipan pesan di session? Kalau ada, kita tampilkan di layar, terus langsung kita hapus pakai `unset($_SESSION['flash'])`. Begitu user refresh atau pindah halaman, pesannya sudah lenyap."
 
-Ini gabungan `isset()` (Part 2 self-study) dengan konsep session yang baru dipelajari — pola yang sudah familiar, sumber data yang baru.
-
-Tekankan urutannya: TAMPILKAN dulu (baris 6), baru HAPUS (baris 7) — kalau dibalik, pesan tidak akan pernah terlihat sama sekali.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk baris 6 lalu baris 7: urutannya wajib ditampilkan dulu, baru dihapus.
 
 
 
@@ -125,9 +132,11 @@ Tekankan urutannya: TAMPILKAN dulu (baris 6), baru HAPUS (baris 7) — kalau dib
 
 <p class="fineprint">Coba refresh sekarang &mdash; pesan hilang, TIDAK ADA data dobel.</p>
 
-Note: Demokan langsung dari awal: buka `create.php`, isi form, submit → otomatis pindah ke `index.php` dengan pesan sukses di atas tabel. LALU tekan refresh — buktikan pesan hilang (karena `unset`) dan yang lebih penting, TIDAK ADA baris data baru muncul (karena request terakhir sekarang GET, bukan POST).
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita coba tes: isi form di `create.php`, submit -> langsung kelempar ke `index.php` dengan pesan hijau 'Data siswa berhasil ditambahkan'. Sekarang coba tekan refresh F5 berkali-kali: pesannya hilang, dan datanya tetap 1, gak dobel sama sekali! Masalah terselesaikan dengan bersih."
 
-Ini adalah momen "aha" untuk Part 5 — masalah yang mereka temukan sendiri di akhir Part 4 sekarang benar-benar terselesaikan, dan mereka bisa MEMBUKTIKANNYA sendiri lewat refresh.
+**🎯 Poin Kunci di Layar:**
+- Tunjukkan alur 5 langkah di atas diagram.
 
 
 
@@ -146,9 +155,11 @@ Setelah <b>INSERT / UPDATE / DELETE</b> berhasil:<br>
 
 <p class="downhint">5 slide tambahan: cookie session, kenapa exit wajib, helper function flash(), session lifetime, login/session-gated CRUD (opsional)</p>
 
-Note: Tekankan bahwa pola tiga langkah ini bukan hanya untuk CREATE — ini adalah pola UNIVERSAL untuk setiap operasi yang MENGUBAH data. Saat Part 7 dan 8 nanti, peserta akan melihat pola yang PERSIS sama, hanya query SQL-nya yang berbeda (UPDATE, lalu DELETE).
+Note: **🗣️ Ngomong ke Peserta:**
+"Ingat 3 langkah sakti ini: set flash -> redirect + exit -> tampilkan dan unset. Pola ini bakal kita pakai persis sama pas ngedit data (UPDATE) dan pas ngehapus data (DELETE) nanti. Sekarang, kita masuk ke babak paling ditunggu-tunggu: membobol web sendiri lewat SQL Injection di Part 6!"
 
-Jembatan ke Part 6: "Sekarang CREATE kita sudah utuh dan aman dari masalah double-submit. Tapi ada satu lubang keamanan yang BELUM kita bahas — dan ini yang akan kita coba bobol sendiri di Part berikutnya."
+**🎯 Transisi ke Part 6 (Klimaks Webinar):**
+- Langsung tekan panah kanan ke Part 6.
 
 
 <p class="part-label">Part 5 · Self-Study</p>
@@ -243,4 +254,4 @@ if (empty($_SESSION['logged_in'])) { header('Location: login.php'); exit; }
 
 Note: **Jawaban:** password dibandingkan sebagai TEKS POLOS (`===`), padahal semestinya di-hash (`password_hash()` saat registrasi, `password_verify()` saat login) supaya kalau database bocor, password asli tidak langsung terbaca. Username/password juga hardcoded di kode, semestinya dari tabel `users` di database.
 
-Ini murni PRATINJAU konsep session-gated access — kalau ada waktu ekstra di luar 150 menit CORE, ini arah pengembangan yang natural untuk capstone: melindungi `create.php`/`edit.php`/`delete.php` supaya hanya bisa diakses setelah login. Detail keamanan password (hashing) SENGAJA di luar cakupan materi hari ini karena fokus utama adalah CRUD, bukan sistem otentikasi lengkap — disebutkan di sini hanya supaya peserta tahu ke mana harus mencari kalau ingin melangkah lebih jauh.
+Ini murni PRATINJAU konsep session-gated access — ini arah pengembangan yang natural untuk dipelajari mandiri atau capstone: melindungi `create.php`/`edit.php`/`delete.php` supaya hanya bisa diakses setelah login. Detail keamanan password (hashing) SENGAJA di luar cakupan materi hari ini karena fokus utama adalah CRUD, bukan sistem otentikasi lengkap — disebutkan di sini hanya supaya peserta tahu ke mana harus mencari kalau ingin melangkah lebih jauh.
