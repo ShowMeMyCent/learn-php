@@ -4,11 +4,10 @@ Dokumen perencanaan untuk deck reveal.js di `phpdeck.html` / `phpdeck/slides/*.m
 Bacaan cepat (scan) — untuk narasi speaker notes LENGKAP, buka deck-nya langsung
 (tekan `S` untuk speaker view) karena versi di sana ditulis lebih detail.
 
-Legenda: `[CORE]` = dipresentasikan dalam 150 menit &middot; `[SELF]` = dibaca mandiri
-setelah sesi &middot; `[HANDS-ON]` = peserta ikut mengetik.
+Legenda: `[CORE]` = dipresentasikan dalam sesi utama &middot; `[SELF]` = dibaca mandiri
+setelah sesi &middot; `[LIVE]` = sesi live coding dari pemateri.
 
-Total: **125 slide** — 76 CORE (~95 menit presentasi + 39 menit hands-on + 10 menit
-live-coding koneksi + 6 menit opening &asymp; 150 menit) + 49 SELF-STUDY.
+Total: **125 slide** — 76 CORE (penjelasan materi + sesi live coding pemateri) + 49 SELF-STUDY.
 
 ---
 
@@ -16,10 +15,10 @@ live-coding koneksi + 6 menit opening &asymp; 150 menit) + 49 SELF-STUDY.
 
 ### SLIDE 1
 Title: Dari C ke PHP — Membangun Backend CRUD
-Main Content: Judul, konteks peminatan Backend, 150 menit, sesi hybrid.
+Main Content: Judul, konteks peminatan Backend, sesi hands-on & live coding.
 [IMAGE PLACEHOLDER]
 Diagram/hero image tema "backend development", opsional dekoratif ringan di judul.
-Speaker Notes: Pastikan dua server (deck + aplikasi PHP) sudah menyala dan `schema.sql`/`seed.sql` sudah di-import SEBELUM mulai. Selesaikan kendala setup di 2 menit pertama.
+Speaker Notes: Pastikan dua server (deck + aplikasi PHP) sudah menyala dan `schema.sql`/`seed.sql` sudah di-import SEBELUM mulai. Selesaikan kendala setup di awal.
 
 ### SLIDE 2
 Title: Kamu sudah punya bekalnya
@@ -27,8 +26,8 @@ Main Content: Tabel dua kolom — yang sudah dikuasai (HTML/CSS, C, SQL dasar) v
 Speaker Notes: Tekankan ini bukan kursus PHP dari nol — ini *delta*. Yang belum dikuasai bukan syntax, tapi model mental request-response.
 
 ### SLIDE 3
-Title: Peta 150 menit
-Main Content: Tabel jadwal per Part dengan menit dan badge hands-on.
+Title: Peta Alur Belajar
+Main Content: Tabel alur per Part dengan fokus materi dan badge live coding.
 Speaker Notes: Jelaskan dua track: CORE (horizontal, dipresentasikan) dan SELF-STUDY (vertical, dibaca mandiri). Jangan pernah tekan panah bawah saat presentasi.
 
 ### SLIDE 4
@@ -47,16 +46,16 @@ Speaker Notes: Demokan aplikasi jadi SUNGGUHAN sekarang (90 detik) — tambah, e
 
 ### SLIDE 6
 Title: Aturan main
-Main Content: 3 momen hands-on (form→$_POST, SELECT→foreach→tabel, coba SQL Injection sendiri), aturan tutup laptop di luar sesi ketik, dua server (:8000 deck, :8001 app).
-Speaker Notes: Aturan "tutup laptop saat bukan sesi ketik" menyelamatkan jadwal 150 menit. Sebutkan aturan parking lot untuk pertanyaan yang melebar (OOP, Laravel, REST API).
+Main Content: 3 sesi live coding pemateri (form→$_POST, SELECT→foreach→tabel, simulasi SQL Injection), fokus peserta menyimak alur logika, dua server (:8000 deck, :8001 app).
+Speaker Notes: Peserta fokus menyimak alur logika dan tidak perlu buru-buru mengetik agar tidak tertinggal. Sebutkan aturan parking lot untuk pertanyaan yang melebar (OOP, Laravel, REST API).
 
 ---
 
 ## Part 1 — PHP Survival Guide `[CORE: 8, SELF: 6]`
 
 ### SLIDE 7 `[CORE]`
-Title: PHP dalam 12 menit
-Main Content: Bagian ini cepat by design — bukan kursus syntax, hanya delta dari C.
+Title: PHP Survival Guide
+Main Content: Bagian ini padat by design — bukan kursus syntax, hanya delta dari C.
 Speaker Notes: "Saya tidak akan mengajarkan apa itu variable/if/loop — kalian sudah tahu dari C. Hanya yang BEDA."
 
 ### SLIDE 8 `[CORE]`
@@ -171,11 +170,11 @@ Title: Guard: pastikan ini benar-benar POST
 Code: `if ($_SERVER['REQUEST_METHOD'] === 'POST') { ... }`
 Speaker Notes: Mencegah error "Undefined array key" saat halaman pertama dibuka (masih GET). Pola ini berulang di create.php/edit.php.
 
-### SLIDE 28 `[CORE][HANDS-ON]`
-Title: Ketik bareng #1 — Form → $_POST
-Main Content: Buat `hello_form.php`, lengkapi TODO: if-guard, ambil `$_POST`, echo sapaan, `var_dump`.
-Code: kerangka TODO (lihat `02-http.md`).
-Speaker Notes: ~8 menit. Tulis checklist di papan, jangan didikte. Kesalahan umum: lupa `method="POST"`, `name` tidak cocok, lupa guard.
+### SLIDE 28 `[CORE][LIVE]`
+Title: Live Coding #1 — Form → $_POST
+Main Content: Demonstrasi pembuatan `hello_form.php`: if-guard, ambil `$_POST`, echo sapaan, `var_dump`.
+Code: implementasi form POST (lihat `02-http.md`).
+Speaker Notes: Demonstrasi live coding langsung di proyektor. Jelaskan alur penanganan form POST. Kesalahan umum pemula: lupa `method="POST"`, `name` tidak cocok, lupa guard.
 
 ### SLIDE 29 `[CORE]`
 Title: Checkpoint #1
@@ -220,12 +219,12 @@ Speaker Notes: Jawaban — hanya saat menyusun response (server-side); render di
 
 ---
 
-## Part 3 — PDO + READ `[CORE: 11, SELF: 7]` — Live coding + HANDS-ON #2
+## Part 3 — PDO + READ `[CORE: 11, SELF: 7]` — Live Coding #2
 
 ### SLIDE 37 `[CORE]`
 Title: PHP bertemu MySQL
 Main Content: READ diajarkan dulu, sebelum CREATE — closed-loop paling sederhana.
-Speaker Notes: Part terpanjang Core Track (~28 menit). Cek ulang semua sudah import schema+seed.
+Speaker Notes: Cek ulang semua sudah import schema+seed di database.
 
 ### SLIDE 38 `[CORE]`
 Title: CONCEPT — PDO sebagai jembatan
@@ -237,18 +236,18 @@ Title: Yang sudah kamu punya: schema saja
 Code: `CREATE TABLE students (id, name, email, major)`
 Speaker Notes: Starter hanya schema+seed, sengaja — koneksi ditulis live 3 slide berikutnya.
 
-### SLIDE 40 `[CORE][HANDS-ON]`
-Title: Live bareng — config/database.php — DSN
+### SLIDE 40 `[CORE][LIVE]`
+Title: Live Coding — config/database.php — DSN
 Code: `$dsn = "mysql:host=$host;dbname=$db;charset=$charset";`
 Speaker Notes: Live coding, ketik perlahan. `127.0.0.1` bukan `localhost` (masalah socket Windows).
 
-### SLIDE 41 `[CORE][HANDS-ON]`
-Title: Live bareng — opsi PDO yang wajib
+### SLIDE 41 `[CORE][LIVE]`
+Title: Live Coding — opsi PDO yang wajib
 Code: `PDO::ATTR_ERRMODE`, `ATTR_DEFAULT_FETCH_MODE`, `ATTR_EMULATE_PREPARES => false`.
 Speaker Notes: Tiap opsi punya alasan konkret — jelaskan satu-satu, bukan boilerplate hafalan. `EMULATE_PREPARES=false` relevan lagi di Part 6.
 
-### SLIDE 42 `[CORE][HANDS-ON]`
-Title: Live bareng — menangkap kegagalan koneksi
+### SLIDE 42 `[CORE][LIVE]`
+Title: Live Coding — menangkap kegagalan koneksi
 Code: `try { new PDO(...) } catch (PDOException $e) { die(...); }`
 Speaker Notes: `database.php` selesai, di-require dari semua file lain.
 
@@ -262,10 +261,10 @@ Title: Array → HTML table
 Code: `foreach ($students as $s): ?><tr><td><?= $s['name'] ?></td>...`
 Speaker Notes: Gabungan langsung Part 1 (assoc array+foreach) + hasil query. Jelaskan syntax alternatif `foreach(...): ... endforeach;`.
 
-### SLIDE 45 `[CORE][HANDS-ON]`
-Title: Ketik bareng #2 — SELECT → foreach → tabel
-Main Content: Buat `index.php` lengkap: require, query, foreach → tabel HTML.
-Speaker Notes: ~10 menit. Kesalahan umum: lupa require, path salah, nama kolom typo, MySQL belum jalan.
+### SLIDE 45 `[CORE][LIVE]`
+Title: Live Coding #2 — SELECT → foreach → tabel
+Main Content: Demonstrasi pembuatan `index.php` lengkap: require, query, foreach → tabel HTML.
+Speaker Notes: Demonstrasi langsung di proyektor. Tunjukkan bagaimana data dari database tampil di tabel browser. Kesalahan umum: lupa require, path salah, nama kolom typo, MySQL belum jalan.
 
 ### SLIDE 46 `[CORE]`
 Title: Checkpoint #2
@@ -466,10 +465,10 @@ Title: Kenapa ini bisa dibobol
 Main Content: Trace payload `%' OR '1'='1'` → kondisi selalu true.
 Speaker Notes: Titik krusial — kutip dari input "keluar" mengubah struktur query, bukan sekadar isinya.
 
-### SLIDE 83 `[CORE][HANDS-ON]`
-Title: Ketik/coba bareng #3 — Buktikan sendiri
-Main Content: Coba input `budi` lalu `%' OR '1'='1` di search rentan, bandingkan jumlah baris.
-Speaker Notes: ~8 menit. Minta peserta ketik sendiri. Tegaskan batas etis sebelum mulai.
+### SLIDE 83 `[CORE][LIVE]`
+Title: Live Demo #3 — Buktikan sendiri
+Main Content: Demonstrasi input `budi` lalu `%' OR '1'='1` di search rentan, bandingkan jumlah baris.
+Speaker Notes: Pemateri mendemonstrasikan langsung payload SQL Injection. Tegaskan batas etis sebelum mulai.
 
 ### SLIDE 84 `[CORE]`
 Title: Checkpoint — SEBELUM diperbaiki
@@ -533,7 +532,7 @@ Speaker Notes: Sarankan disimpan terpisah untuk dibuka saat mengerjakan capstone
 
 ### SLIDE 95 `[CORE]`
 Title: UPDATE — sintesis dari semua yang sudah dipelajari
-Speaker Notes: Sengaja sangat cepat (~9 menit) — pola sama, query beda. Tidak ada hands-on baru.
+Speaker Notes: Alur ringkas — pola sama, query beda. Murni kombinasi konsep yang sudah dipelajari.
 
 ### SLIDE 96 `[CORE]`
 Title: UPDATE = CREATE + WHERE id
@@ -629,7 +628,7 @@ Speaker Notes: Relevan kalau capstone menghubungkan students & courses (Part 10)
 
 ### SLIDE 113 `[CORE]`
 Title: Validation — lubang terakhir yang belum ditutup
-Speaker Notes: Sengaja dipadatkan (~14 menit) — waktu dijaga untuk briefing capstone.
+Speaker Notes: Alur ringkas — fokus pada prinsip server-side validation.
 
 ### SLIDE 114 `[CORE]`
 Title: CONCEPT — client-side bukan pengganti server-side
@@ -695,7 +694,7 @@ Speaker Notes: Kelas ancaman berbeda dari SQLi/XSS — alasan tambahan kenapa mu
 
 ### SLIDE 126 `[CORE]`
 Title: Giliran Kamu — Bangun CRUD tanpa dituntun
-Speaker Notes: Nada menantang tapi memberi semangat — ini ujian sesungguhnya dari 150 menit.
+Speaker Notes: Nada menantang tapi memberi semangat — ini ujian sesungguhnya dari seluruh materi.
 
 ### SLIDE 127 `[CORE]`
 Title: Courses Management System

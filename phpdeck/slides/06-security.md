@@ -5,9 +5,11 @@
 
 ## SQL Injection &amp; XSS
 
-Note: Ini bagian yang paling penting diingat dari SELURUH sesi hari ini — lebih penting daripada sintaks CRUD itu sendiri. Sampaikan itu secara eksplisit di awal.
+Note: **🗣️ Ngomong ke Peserta:**
+"Nah, teman-teman, ini bagian paling krusial dari seluruh sesi kita hari ini: Keamanan Web! Jangan pernah percaya input siapapun. Tapi sebelum kita mulai, ada satu aturan mutlak: semua demo peretasan ini HANYA boleh kalian coba di database lokal laptop kalian sendiri. Jangan pernah dicoba ke sistem kampus atau web orang lain!"
 
-Aturan keamanan sebelum mulai: SEMUA demo di Part ini HANYA dilakukan di database lokal, throwaway, milik masing-masing peserta di laptop sendiri. Tidak pernah dicoba ke aplikasi orang lain, apalagi yang online. Sampaikan ini SEBELUM menunjukkan payload apa pun.
+**🎯 Poin Kunci di Layar:**
+- Tekankan etika: lab lokal hanya untuk pemahaman bertahan (*defense*).
 
 
 
@@ -26,9 +28,14 @@ SQL Injection  ->  input MENJADI bagian dari QUERY (masalah di SQL)
 XSS            ->  input MENJADI bagian dari HTML  (masalah di output)
 ```
 
-Note: Akar masalah keduanya IDENTIK: kode kita memperlakukan input user sebagai sesuatu yang bisa dipercaya begitu saja, lalu menggabungkannya LANGSUNG ke dalam sesuatu yang akan "dieksekusi" — SQL Injection saat input digabung ke query SQL, XSS saat input digabung ke HTML yang browser render.
+Note: **🗣️ Ngomong ke Peserta:**
+"Ada 2 momok terbesar web developer pemula: SQL Injection dan XSS. Akar masalahnya sama persis: kita terlalu percaya sama apa yang diketik user!
+Bedanya cuma arahnya:
+- Kalau SQL Injection: input user masuk dan ngerusak perintah query di database MySQL.
+- Kalau XSS: input user masuk dan ngerusak tampilan HTML di browser orang lain."
 
-Prinsip yang akan terus diulang: **input dari luar (form, URL, header, apa pun yang bisa dikontrol orang lain) TIDAK PERNAH dipercaya secara default.** Ini bukan paranoia berlebihan — ini adalah asumsi kerja standar setiap backend developer.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk dua panah: SQLi di database, XSS di browser klien.
 
 
 
@@ -50,9 +57,11 @@ $students = $pdo->query($sql)->fetchAll();
 
 <p class="fineprint">Perhatikan: <code>$q</code> langsung DISAMBUNG ke string SQL. Tidak ada <code>prepare()</code>.</p>
 
-Note: Ini file DEMO terpisah, bukan `index.php` final yang sudah dibangun — tunjukkan dengan jelas kepada peserta bahwa ini adalah versi yang SENGAJA ditulis salah untuk keperluan demonstrasi.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita bedah file pencarian yang sengaja dibuat rentan. Perhatikan baris 3: variabel `$q` ditempel mentah-mentah pakai petik ke dalam query SQL. Di Part 3 tadi kita bilang: kalau ada tanda dollar milik user di dalam string SQL, haram hukumnya pakai `query()` langsung! Sekarang kita buktikan kenapa cara ini sangat berbahaya."
 
-Bandingkan dengan pola `query()` di Part 3: di sana AMAN karena tidak ada input user. Di sini, `$q` berasal LANGSUNG dari `$_GET['q']` (bisa diisi siapa saja lewat URL) dan disambung memakai tanda kutip biasa ke tengah string SQL. Inilah persis pola yang di Part 3 self-study sudah diperingatkan: "ada tanda `$` milik user di dalam string SQL → wajib `prepare()`". Di sini kita LANGGAR aturan itu dengan sengaja, untuk melihat akibatnya.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk `$q` di dalam petik `'%$q%'`: ini celah fatalnya.
 
 
 
@@ -70,32 +79,37 @@ SQL jadi:      ... WHERE name LIKE '%%' OR '1'='1%'             -> SELALU true!
 
 <div class="ask"><b>Perhatikan:</b> tanda kutip <code>'</code> di dalam input berhasil "keluar" dari tempatnya, mengubah STRUKTUR query, bukan sekadar isinya.</div>
 
-Note: Jelaskan pelan-pelan, ini titik paling krusial untuk dipahami: MySQL tidak tahu bedanya "kutip yang kita tulis di kode" dengan "kutip yang datang dari input user" — begitu digabung jadi satu string SQL, semuanya terlihat sama sebagai teks SQL murni bagi MySQL.
+Note: **🗣️ Ngomong ke Peserta:**
+"Perhatikan logika ini: kalau user ngetik 'budi', query-nya wajar. Tapi kalau hacker ngetik `%' OR '1'='1`, tanda kutip satu dari input user berhasil kabur dan menutup string query kita lebih cepat! Akibatnya apa? MySQL membaca perintah baru: `OR '1'='1'`.
+Karena 1 selalu sama dengan 1, kondisi pencarian jadi SELALU BENAR! Database bakal memuntahkan SEMUA baris yang ada di tabel tanpa peduli siapa namanya."
 
-Payload `%' OR '1'='1` sengaja mengandung tanda kutip (`'`) yang menutup string `'%...%'` LEBIH AWAL dari yang diharapkan kode kita, lalu menambahkan kondisi `OR '1'='1'` yang NILAINYA SELALU BENAR. Karena `OR` dengan kondisi yang selalu benar, seluruh `WHERE` menjadi selalu benar — MySQL mengembalikan SEMUA baris di tabel, bukan hasil pencarian yang dimaksud.
-
-Tekankan: user yang mengirim ini tidak "meretas" MySQL atau PHP secara teknis rumit — mereka hanya memanfaatkan bahwa kode kita mempercayai input mentah sebagai bagian dari perintah.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk `'1'='1'`: kutip jahat mengubah struktur logika query database.
 
 
 
 <p class="part-label">Part 6 · Security Checkpoint</p>
 
-## <span class="badge badge-hands">Ketik/coba bareng #3</span> Buktikan sendiri
+## <span class="badge badge-hands">Live Demo #3</span> Simulasi Serangan SQL Injection
 
-Buka fitur search (versi rentan), coba dua input ini satu-satu:
+Pemateri mendemokan kotak pencarian (versi rentan) dengan dua input:
 
 ```text
-1. budi                    -> hasil pencarian normal
-2. %' OR '1'='1            -> perhatikan JUMLAH baris yang muncul
+1. budi                    -> hasil pencarian normal (filter nama berjalan)
+2. %' OR '1'='1            -> SQL Injection: seluruh data tabel bocor!
 ```
 
-<p class="fineprint">~8 menit. Lokal saja, database throwaway milikmu sendiri.</p>
+<p class="fineprint">Simulasi Live: Memperlihatkan bahaya fatal jika input user disambung langsung ke string SQL.</p>
 
-Note: Minta peserta mengetik payload ini SENDIRI di kotak search browser mereka masing-masing (bukan menonton layar instruktur saja) — pengalaman mengetik dan melihat hasilnya sendiri jauh lebih berkesan daripada menonton demo.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang perhatikan ke layar proyektor. Saya akan mendemokan Live Demo #3: bagaimana serangan SQL Injection bekerja secara nyata.
+Pertama, saya ketik 'budi'. Hasilnya wajar, hanya muncul data yang mengandung kata budi.
+Sekarang, perhatikan kalau saya masukkan payload ini: `%' OR '1'='1`. Begitu saya tekan Enter... BOOM! Seluruh isi tabel langsung tumpah ke layar!
+Kenapa bisa begitu? Karena tanda kutip dari input berhasil membajak struktur perintah SQL di server kita. Sekarang mari kita pelajari bagaimana cara menutup celah ini menggunakan Prepared Statement!"
 
-Sebelum mereka mulai, ingatkan sekali lagi batasan etisnya: teknik ini HANYA dicoba di aplikasi/database milik sendiri untuk tujuan belajar. Menggunakan teknik yang sama di sistem milik orang lain tanpa izin adalah tindakan ilegal, bukan sekadar "iseng belajar". Ini bukan basa-basi formalitas — tegaskan dengan serius.
-
-Berkeliling saat mereka mencoba, pastikan semua berhasil melihat perbedaan jumlah baris sebelum lanjut ke slide checkpoint berikutnya.
+**🎯 Poin Kunci di Layar:**
+- Tunjukkan perbedaan hasil pencarian biasa vs payload SQL Injection.
+- Tunjukkan kepanikan data bocor sebagai motivasi pentingnya Prepared Statement.
 
 
 
@@ -121,9 +135,11 @@ Screenshot nyata hasil percobaan di laptop instruktur, menunjukkan seluruh isi t
 <i>Ambil screenshot sendiri saat demo langsung, jangan pakai gambar dari internet</i>
 </div>
 
-Note: Ini bukti visual yang harus benar-benar terjadi di layar, bukan hanya diceritakan. Tunjukkan: mencari "budi" (yang mungkin tidak ada di data) mengembalikan 0 hasil seperti wajar, tapi payload `%' OR '1'='1` mengembalikan SELURUH isi tabel — termasuk data yang seharusnya tidak relevan dengan pencarian sama sekali.
+Note: **🗣️ Ngomong ke Peserta:**
+"Kalian lihat di layar? Seluruh 6 data mahasiswa bocor keluar! Ini baru contoh paling ringan. Bayangkan kalau hacker ganti payload-nya jadi perintah buat nyolong tabel password atau ngehapus seluruh database. Cuma gara-gara satu tanda kutip yang lupa kita amankan."
 
-Ini adalah bentuk PALING RINGAN dari akibat SQL Injection (hanya membaca data yang memang ada di tabel yang sama). Sebutkan singkat bahwa dalam kasus nyata, teknik serupa bisa diperluas untuk membaca tabel LAIN (misalnya tabel `users` berisi password), memodifikasi data, bahkan menghapus seluruh tabel — tidak perlu didemokan, cukup disebut sebagai gambaran skala bahayanya.
+**🎯 Poin Kunci di Layar:**
+- Tunjukkan bahwa filter nama sama sekali tidak berfungsi karena diakali oleh logika SQL Injection.
 
 
 
@@ -145,9 +161,12 @@ $students = $stmt->fetchAll();
 
 </div>
 
-Note: Bandingkan baris demi baris dengan versi rentan sebelumnya: `$q` sekarang TIDAK PERNAH disambung langsung ke string SQL — string SQL-nya (`WHERE name LIKE :q`) SELALU sama persis, apa pun yang diketik user. Nilai `$q` (dengan tanda `%` sudah ditambahkan di PHP, baris 5) dikirim TERPISAH lewat `execute()`.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita sembuhkan! Kodenya diubah jadi begini: kita pakai `prepare()` dengan placeholder `:q`. Lalu nilai pencariannya kita kirim lewat `execute(['q' => '%' . $q . '%'])`.
+Karena di Part 3 tadi kita pasang `EMULATE_PREPARES => false`, MySQL bakal membedah struktur query-nya dulu sampai tuntas. Begitu input user masuk, tanda kutip apapun cuma bakal dianggap sebagai huruf biasa, bukan perintah kode!"
 
-Karena `EMULATE_PREPARES => false` (diset di Part 3), MySQL menerima SQL dan data lewat dua "saluran" yang benar-benar terpisah. MySQL memperlakukan `:q` sebagai SATU nilai data utuh, apa pun isinya — termasuk kalau isinya mengandung tanda kutip. Tanda kutip di dalam input TIDAK PERNAH bisa "keluar" mengubah struktur query, karena struktur query sudah final SEBELUM data dikirim.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk `:q`: placeholder yang membuat query dan data terpisah jalurnya.
 
 
 
@@ -165,9 +184,11 @@ Karena `EMULATE_PREPARES => false` (diset di Part 3), MySQL menerima SQL dan dat
 
 <div class="checkpoint"><b>Input SAMA PERSIS, hasil BERBEDA TOTAL:</b> 0 baris, karena PHP mencari nama siswa yang secara harfiah mengandung teks <code>%' OR '1'='1</code> &mdash; tidak ada yang cocok.</div>
 
-Note: Ini momen paling penting di seluruh Part 6 — payload IDENTIK, tapi hasilnya sekarang 0 baris, bukan 6 baris. Perbandingan sebelum/sesudah dengan input yang sama persis inilah yang membuat konsep "data vs kode" benar-benar melekat, bukan sekadar dihafal sebagai aturan abstrak.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kalian coba tes lagi dengan payload yang sama persis: `%' OR '1'='1`. Hasilnya apa? Tepat 0 hasil! Kenapa? Karena MySQL sekarang nyari mahasiswa yang nama KTP-nya beneran bertuliskan `% OR 1=1`. Dan karena gak ada orang dengan nama seaneh itu, database membalas 'Tidak ada siswa ditemukan'. Celah SQL Injection resmi ditutup!"
 
-Tegaskan ulang: `prepare()` bukan "menyaring karakter berbahaya" atau "memblokir kata kunci tertentu" — MySQL memperlakukan payload itu sebagai TEKS PENCARIAN BIASA, sama seperti kalau user benar-benar mencari nama siswa yang aneh. Tidak ada satpam yang mendeteksi "wah ini mencurigakan" — strukturnya memang sudah tidak mungkin ditembus lagi.
+**🎯 Poin Kunci di Layar:**
+- Input identik, tapi sistem sekarang kebal.
 
 
 
@@ -190,11 +211,12 @@ Screenshot popup alert() JavaScript yang muncul di halaman index.php akibat nama
 <i>Ambil screenshot sendiri saat demo, jangan pakai gambar generik dari internet</i>
 </div>
 
-Note: Demokan langsung (instruktur yang mengetik, tidak perlu semua peserta mencoba — waktu terbatas): buka `create.php`, isi field nama dengan `<script>alert('Data kamu bisa disadap!')</script>`, submit. Buka `index.php` — popup alert benar-benar muncul.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang ancaman kedua: **XSS (Cross-Site Scripting)**. Ini kebalikan dari SQL Injection. Kalau SQL Injection itu input merusak database, XSS itu data berbahaya keluar dan merusak browser user lain.
+Coba perhatikan demo ini: saya nambah mahasiswa baru, tapi namanya saya isi tag script JavaScript: `<script>alert('Data kamu bisa disadap!')</script>`. Pas dibuka di `index.php`, popup alert-nya beneran muncul di layar!"
 
-Jelaskan akar masalahnya: `index.php` mencetak `<?= $s['name'] ?>` LANGSUNG ke HTML tanpa memprosesnya lebih dulu. Kalau nilai `name` mengandung tag `<script>`, browser tidak bisa membedakan "ini teks yang harus ditampilkan apa adanya" dengan "ini kode HTML/JavaScript yang harus dijalankan" — browser menjalankannya begitu saja.
-
-Ini kebalikan dari SQL Injection dalam hal ARAH: SQL Injection terjadi saat INPUT masuk ke query (di awal alur). XSS terjadi saat DATA (yang sudah tersimpan di database, mungkin dari input berbahaya sebelumnya) keluar sebagai OUTPUT HTML (di akhir alur, saat ditampilkan).
+**🎯 Poin Kunci di Layar:**
+- Demonstrasikan popup alert JavaScript yang terpicu karena kode HTML disuntik langsung ke halaman.
 
 
 
@@ -227,11 +249,12 @@ Ini kebalikan dari SQL Injection dalam hal ARAH: SQL Injection terjadi saat INPU
 
 <p class="fineprint"><code>&lt;script&gt;</code> berubah jadi teks <code>&amp;lt;script&amp;gt;</code> &mdash; tampil sebagai TEKS, bukan dijalankan sebagai kode.</p>
 
-Note: `htmlspecialchars()` mengubah karakter-karakter HTML yang punya arti khusus (`<`, `>`, `"`, `'`, `&`) menjadi bentuk "entity" (`&lt;`, `&gt;`, dst) yang oleh browser DITAMPILKAN sebagai teks biasa, bukan diinterpretasikan sebagai tag HTML.
+Note: **🗣️ Ngomong ke Peserta:**
+"Kenapa bisa gitu? Karena saat kita tulis `<?= $s['name'] ?>`, browser gak tau mana teks nama manusia dan mana tag HTML. Semua langsung dieksekusi.
+Obatnya: setiap kali kalian mencetak data ke layar HTML, bungkus pakai fungsi `htmlspecialchars()`. Fungsi ini bakal menyulap kurung siku `<` jadi `&lt;`. Hasilnya: teks `<script>` bakal dicetak murni sebagai tulisan biasa di layar, bukan dieksekusi sebagai program oleh browser."
 
-`ENT_QUOTES` memastikan tanda kutip tunggal DAN ganda ikut di-escape (bukan hanya salah satunya, yang merupakan default lama PHP) — penting kalau data ini nanti juga dipakai di dalam atribut HTML seperti `value="..."`. `'UTF-8'` memastikan encoding karakter konsisten dengan `charset=utf8mb4` yang sudah diatur sejak Part 3.
-
-Aturan praktis untuk dibawa pulang: **setiap kali mencetak data yang berasal dari user (langsung dari `$_POST`/`$_GET`, ATAU dari database yang mungkin pernah diisi lewat input user) ke HTML, bungkus dengan `htmlspecialchars()`.** Ini akan dipakai lagi di Part 9 saat membahas repopulate form.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk kolom kanan: bungkus `htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8')`.
 
 
 
@@ -249,9 +272,14 @@ Aturan praktis untuk dibawa pulang: **setiap kali mencetak data yang berasal dar
 
 <p class="downhint">5 slide tambahan: kenapa prepared mematikan SQLi secara teknis, wildcard LIKE, whitelist ORDER BY, escaping di konteks lain, checklist keamanan capstone</p>
 
-Note: Ini slide penutup Part 6 — pastikan dua baris di tabel ini benar-benar tertanam sebelum lanjut. Kalau perlu, minta 2-3 peserta mengulang dengan kata-kata sendiri: "Kapan pakai prepared statement? Kapan pakai htmlspecialchars?"
+Note: **🗣️ Ngomong ke Peserta:**
+"Dua hukum wajib web backend yang harus kalian ingat seumur hidup:
+1. Data masuk ke SQL? Wajib `prepare()` + `execute()`.
+2. Data keluar ke HTML? Wajib `htmlspecialchars()`.
+Pegang dua kunci ini, aplikasi kalian sudah lebih aman dari 80% tugas kuliah di luar sana. Sekarang kita gaspol ke Part 7 & 8: UPDATE dan DELETE!"
 
-Jembatan ke Part 7: "Sekarang kita punya CREATE dan READ yang aman. Tapi CRUD kita baru setengah jalan — UPDATE dan DELETE masih perlu dibangun. Kabar baiknya: polanya HAMPIR SAMA PERSIS dengan yang sudah kalian kuasai."
+**🎯 Transisi ke Part 7:**
+- Lanjut tekan panah kanan ke Part 7.
 
 
 <p class="part-label">Part 6 · Self-Study</p>

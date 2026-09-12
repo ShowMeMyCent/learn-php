@@ -55,7 +55,7 @@ bentuk tabel HTML.
 - [ ] Kalau tabel kosong, tampil pesan "Belum ada data", bukan tabel kosong
       tanpa penjelasan
 
-**Hint bertingkat** (buka hanya kalau stuck > 10 menit):
+**Hint bertingkat** (buka hanya kalau benar-benar stuck setelah mencoba):
 1. Query apa yang dipakai untuk mengambil SEMUA baris tanpa filter?
 2. Bentuk data hasil `fetchAll()` itu array apa? Bagaimana cara mencetak
    tiap barisnya jadi `<tr>`?

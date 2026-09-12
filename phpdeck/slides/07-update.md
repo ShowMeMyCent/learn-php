@@ -5,9 +5,11 @@
 
 ## Sintesis dari semua yang sudah dipelajari
 
-Note: Part ini dan Part 8 sengaja dibuat SANGAT cepat (masing-masing sekitar 9 menit) karena secara sengaja dijual sebagai "pola yang sama, cuma query-nya beda" — bukan konsep baru. Kalau terasa terburu-buru, itu memang tujuannya: membuktikan bahwa fondasi Part 2-6 sudah cukup untuk menaklukkan sisa CRUD dengan cepat.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita masuk ke UPDATE (edit data). Kabar baiknya: di bagian ini gak ada materi baru yang bikin pusing! UPDATE itu cuma gabungan dari READ 1 baris buat nampilin data lama ke form, lalu diproses pakai query UPDATE. Polanya 100% sama kayak yang sudah kita pelajari."
 
-Tidak ada hands-on baru di sini — murni menonton, karena semua elemen penyusunnya sudah pernah mereka ketik sendiri sebelumnya (form, prepared statement, PRG, flash).
+**🎯 Poin Kunci di Layar:**
+- Alur ringkas: murni kombinasi konsep yang sudah dipelajari.
 
 
 
@@ -30,9 +32,13 @@ Diagram siklus CRUD dengan "Update" disorot/highlight, posisinya di antara Creat
 <span>PRG</span>
 </div>
 
-Note: Tekankan bahwa UPDATE bukan konsep baru — ia adalah GABUNGAN dari READ (Part 3, untuk mengambil data yang akan diedit) dan CREATE (Part 4, pola form + prepared statement + PRG), ditambah satu hal baru: query-nya menyasar SATU baris spesifik lewat `WHERE id = :id`, bukan menyisipkan baris baru.
+Note: **🗣️ Ngomong ke Peserta:**
+"Alurnya cuma 2 tahap:
+Pertama (GET): Pas tombol Edit diklik, kita tarik 1 data mahasiswa dari database, lalu kita tempelkan ke dalam form biar user bisa lihat data lamanya.
+Kedua (POST): Pas tombol Simpan diklik, kita jalankan query UPDATE dengan syarat `WHERE id = :id`. Habis itu, redirect lagi ke `index.php` pakai PRG."
 
-Satu file `edit.php` akan menangani DUA request berbeda: GET (menampilkan form terisi data lama) dan POST (memproses perubahan) — pola if-guard `REQUEST_METHOD` dari Part 2 dipakai lagi persis di sini.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk alur flow: GET buat nampilin data lama, POST buat nyimpen data baru.
 
 
 
@@ -55,11 +61,15 @@ $student = $stmt->fetch();
 </form>
 ```
 
-Note: `$id` berasal dari `$_GET['id']` — INI juga input user, jadi query pengambilannya WAJIB `prepare()`, persis alasan yang sama seperti fitur search di Part 6. Tidak ada pengecualian "khusus form edit boleh langsung".
+Note: **🗣️ Ngomong ke Peserta:**
+"Perhatikan kodenya:
+1. Kita ambil id dari URL lewat `$_GET['id']`. Tetap wajib pakai `prepare()` ya!
+2. Kita pakai `fetch()`, bukan `fetchAll()`. Kenapa? Karena ID itu unik, datanya pasti cuma 1 baris.
+3. Di dalam tag input form, atribut `value` kita isi data lama dan dibungkus `htmlspecialchars()`. Jangan lupa bungkus ini biar karakter kutip gak ngerusak tag HTML."
 
-`fetch()` (bukan `fetchAll()`) dipakai karena kita tahu hasilnya PALING BANYAK satu baris — `id` adalah PRIMARY KEY, unik.
-
-Perhatikan `value="<?= htmlspecialchars($student['name']) ?>"` — INI penerapan langsung pelajaran Part 6: data dari database (yang mungkin pernah diisi lewat input user) dicetak ke ATRIBUT HTML `value`, tetap harus di-escape. Kalau tidak, nama yang mengandung tanda kutip bisa merusak struktur HTML form ini.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk `fetch()`: cuma 1 baris.
+- Tunjuk `value=\"<?= htmlspecialchars(...) ?>\"`.
 
 
 
@@ -84,11 +94,12 @@ Perhatikan `value="<?= htmlspecialchars($student['name']) ?>"` — INI penerapan
 
 <p class="fineprint">Bandingkan dengan INSERT di Part 4 &mdash; strukturnya nyaris identik.</p>
 
-Note: Minta peserta membandingkan sendiri dengan slide INSERT di Part 4 — perbedaannya HANYA: kata kunci `UPDATE ... SET` alih-alih `INSERT INTO ... VALUES`, dan tambahan klausa `WHERE id = :id` untuk menyasar baris yang tepat.
+Note: **🗣️ Ngomong ke Peserta:**
+"Pas form disubmit, perintah SQL-nya adalah `UPDATE students SET name = :name ... WHERE id = :id`.
+Tolong perhatikan baik-baik: **JANGAN PERNAH LUPA KLAUSA `WHERE id = :id`**! Kalau kalian lupa nulis WHERE id, seluruh data mahasiswa di tabel bakal berubah namanya jadi nama yang kalian ketik. Ini mimpi buruk nomor satu developer basis data."
 
-`WHERE id = :id` adalah bagian PALING KRITIS di query ini — TANPA klausa ini, `UPDATE students SET name = ...` akan mengubah SEMUA baris di tabel menjadi nilai yang sama. Ini kesalahan yang cukup umum bagi pemula: lupa `WHERE`, dan seluruh tabel "tertimpa" data yang sama.
-
-`$_GET['id']` dipakai di sini (bukan `$_POST['id']`) karena id dikirim lewat URL form action (`edit.php?id=5`), bukan sebagai field form tersembunyi — kedua pendekatan valid, dibahas perbandingannya di self-study.
+**⚠️ Peringatan Kritis:**
+- Tekankan bahaya UPDATE tanpa WHERE.
 
 
 
@@ -104,9 +115,11 @@ exit;
 
 <p class="fineprint">Persis pola Part 5. Tidak ada yang baru di sini &mdash; itulah intinya.</p>
 
-Note: Tunjukkan bahwa TIGA baris ini identik dengan pola yang dipakai di `create.php` — hanya isi pesannya berbeda ("ditambahkan" vs "diperbarui"). Ini bukti konkret bahwa pola PRG+flash yang dipelajari di Part 5 benar-benar universal, bukan trik khusus untuk CREATE saja.
+Note: **🗣️ Ngomong ke Peserta:**
+"Setelah UPDATE selesai, kita panggil lagi jurus PRG yang tadi: pasang flash message 'Data siswa berhasil diperbarui', redirect ke `index.php`, lalu pasang `exit;`. Polanya identik kan dengan yang tadi? Sekali kalian paham polanya, semua fitur backend tinggal ngulang jurus yang sama."
 
-Kalau helper function `setFlash()`/`getFlash()` dari Part 5 self-study sudah dipakai, di sinilah manfaatnya terasa — tidak perlu menulis ulang `$_SESSION['flash'] = ...` di setiap file, cukup panggil function-nya.
+**🎯 Poin Kunci di Layar:**
+- Tekankan konsistensi: PRG dipakai di setiap mutasi.
 
 
 
@@ -123,9 +136,12 @@ Tidak ada konsep baru &mdash; hanya kombinasi baru dari yang sudah dikuasai.
 
 <p class="downhint">3 slide tambahan: hidden input vs query string untuk id, row not found, partial update</p>
 
-Note: Demokan alur lengkap end-to-end sekali: dari `index.php`, klik link/tombol "Edit" pada salah satu baris (yang mengarah ke `edit.php?id=N`), ubah salah satu field, submit, kembali ke `index.php` dan tunjukkan data sudah berubah PLUS pesan flash "berhasil diperbarui" muncul.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita demokan: klik tombol Edit di baris Bagas Prakoso, kita ganti jurusannya jadi 'Teknik Informatika', klik Simpan. Halaman langsung balik ke `index.php` dan jurusannya sudah ter-update rapi!
+UPDATE beres. Sekarang tinggal satu huruf terakhir di CRUD: huruf D alias DELETE di Part 8."
 
-Jembatan cepat ke Part 8: "Update selesai. Sisa satu huruf terakhir dari CRUD — dan ini yang paling singkat dari semuanya."
+**🎯 Transisi ke DELETE:**
+- Tekan panah kanan ke Part 8.
 
 
 <p class="part-label">Part 7 · Self-Study</p>

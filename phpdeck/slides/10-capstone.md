@@ -5,9 +5,13 @@
 
 ## Bangun CRUD tanpa dituntun
 
-Note: Ini Part penutup CORE — sekitar 8 menit, jangan sampai molor karena ini juga waktu untuk Q&A yang biasanya dibutuhkan peserta sebelum sesi berakhir.
+Note: **🗣️ Ngomong ke Peserta:**
+"Selamat teman-teman! Kita sudah menyelesaikan semua materi dasar dari Part 0 sampai Part 9. Dari yang tadinya cuma kenal C, sekarang kalian sudah paham siklus HTTP, koneksi database PDO, pola PRG, sampai pengamanan data dan validasi.
+Nah, sekarang giliran kalian: saatnya Capstone Project! Di sini kalian akan membuktikan bahwa kalian bukan cuma bisa meniru kode di layar, tapi benar-benar paham cara membangun sistem CRUD dari nol."
 
-Nada slide ini penting: bukan "materi tambahan", tapi UJIAN SESUNGGUHNYA dari 150 menit yang baru saja dilalui. Sampaikan dengan nada menantang tapi memberi semangat, bukan menakut-nakuti.
+**🎯 Poin Kunci di Layar:**
+- Beri apresiasi dan motivasi: overview capstone & Q&A.
+- Tegaskan bahwa ini bukan tugas yang menakutkan, tapi pembuktian pemahaman mereka.
 
 
 
@@ -32,9 +36,15 @@ Diagram ERD sederhana tabel courses (id, name, code, credits), gaya visual serup
 
 <p class="fineprint">Struktur SENGAJA mirip <code>students</code> &mdash; kamu sudah tahu polanya.</p>
 
-Note: Entity `courses` dipilih SENGAJA karena bentuknya paralel dengan `students` — tiga kolom teks/angka sederhana, tanpa relasi kompleks. Ini bukan kebetulan: tujuannya BUKAN menguji hal baru, tapi menguji apakah pola yang sudah dipelajari (form → $_POST → prepared statement → PRG → validasi) bisa DITRANSFER ke konteks berbeda tanpa menyalin-tempel dari `students`.
+Note: **🗣️ Ngomong ke Peserta:**
+"Untuk proyek capstone ini, kalian akan membuat **Courses Management System** (Sistem Manajemen Mata Kuliah).
+Lihat struktur tabelnya di layar: ada `id`, `name` (nama matkul), `code` (kode matkul seperti CS101), dan `credits` (jumlah SKS).
+Perhatikan bahwa strukturnya mirip sekali dengan tabel `students` yang tadi kita buat. Ini sengaja! Kita tidak ingin membebani kalian dengan relasi database yang rumit dulu. Tujuannya adalah menguji apakah kalian bisa mentransfer pola yang sudah dipelajari ke entitas baru.
+Boleh intip kode `students`, tapi target akhirnya: kalian harus bisa menjelaskan fungsi setiap baris kodenya, bukan sekadar asal copas dan jalan."
 
-Tekankan: menyalin file `index.php` milik `students` lalu mengganti nama variable adalah AWAL yang wajar, tapi target sesungguhnya adalah bisa menjelaskan SETIAP baris yang ditulis — bukan hanya berhasil menjalankannya.
+**🎯 Poin Kunci di Layar:**
+- Tunjukkan tabel `courses`: 3 field utama (`name`, `code`, `credits`).
+- Polanya 100% sama: Form -> `$_POST` -> Prepared Statement -> PRG -> Validasi.
 
 
 
@@ -53,9 +63,17 @@ Tekankan: menyalin file `index.php` milik `students` lalu mengganti nama variabl
 
 <p class="fineprint">Detail lengkap tiap milestone: <code>phpdeck/docs/capstone-guide.md</code></p>
 
-Note: Lima milestone ini SENGAJA mengikuti urutan Part yang baru saja dipelajari (READ dulu, baru CREATE, dst) — pola yang sama yang membuat sesi hari ini terasa terarah juga berlaku untuk cara mereka membangun capstone sendiri.
+Note: **🗣️ Ngomong ke Peserta:**
+"Supaya tidak pusing, jangan langsung bikin semuanya sekaligus. Kerjakan bertahap lewat 5 milestone ini:
+1. **Milestone 1:** Buat tabelnya di MySQL, buat file koneksi `db.php`, dan tampilkan daftar course (READ).
+2. **Milestone 2:** Bikin form tambah course dengan pola PRG (CREATE).
+3. **Milestone 3:** Bikin form edit yang otomatis terisi data lama (UPDATE).
+4. **Milestone 4:** Bikin tombol hapus dengan form POST (DELETE).
+5. **Milestone 5:** Pasang validasi input dan pastikan `htmlspecialchars()` serta prepared statement terpasang di semua fitur.
+Panduan detail dan checklist lengkap per milestone ada di file `phpdeck/docs/capstone-guide.md`."
 
-Dokumen `capstone-guide.md` (dibagikan terpisah, lebih detail dari slide ini) berisi acceptance criteria konkret per milestone dan hint bertingkat kalau mereka benar-benar buntu — tapi dorong mereka mencoba dulu tanpa membuka hint, itu yang membuat transfer pemahaman benar-benar terjadi.
+**🎯 Poin Kunci di Layar:**
+- Urutan milestone sama persis dengan urutan materi workshop: READ -> CREATE -> UPDATE -> DELETE -> Validasi & Keamanan.
 
 
 
@@ -73,9 +91,15 @@ Dokumen `capstone-guide.md` (dibagikan terpisah, lebih detail dari slide ini) be
 
 <p class="fineprint">Baris terakhir adalah yang paling penting &mdash; bukan sekadar "jalan".</p>
 
-Note: Checklist ini sengaja menggabungkan checklist keamanan dari Part 6 self-study dengan satu kriteria tambahan yang paling menentukan: KEMAMPUAN MENJELASKAN, bukan hanya keberhasilan menjalankan program.
+Note: **🗣️ Ngomong ke Peserta:**
+"Kapan proyek kalian dianggap tuntas? Ini dia **Definition of Done**-nya:
+Pertama, keamanan: semua query yang menerima input user wajib pakai prepared statement, dan semua output ke layar wajib pakai `htmlspecialchars()`.
+Kedua, arsitektur: perubahan data wajib lewat method POST dan mengikuti pola PRG dengan flash message.
+Ketiga, validasi: form divalidasi di PHP sisi server.
+Dan yang paling penting adalah poin terakhir: kalian bisa menjelaskan cara kerja kode kalian ke orang lain tanpa bingung. Coba tes jelaskan ke teman di sebelah kalian: 'baris ini buat apa, alurnya gimana'. Kalau teman kalian paham, artinya kalian beneran menguasai backend!"
 
-Ini kriteria yang membedakan "mengikuti tutorial" dari "memahami backend" — persis tujuan yang disampaikan mentor sejak awal perancangan materi ini. Sarankan peserta mencoba menjelaskan kode mereka ke teman sebangku/rekan belajar sebagai bentuk verifikasi mandiri sebelum menganggap capstone selesai.
+**🎯 Poin Kunci di Layar:**
+- Tekankan baris terakhir: keberhasilan backend bukan cuma 'program jalan', tapi programmer-nya paham alur di balik layar.
 
 
 
@@ -93,9 +117,15 @@ Screenshot deck reveal.js dengan indikator panah bawah (down arrow) yang menanda
 Tekan <b>panah bawah</b> di slide mana pun untuk membuka slide <span class="badge badge-self">Self-Study</span> &mdash; penjelasan lebih dalam + checkpoint question, bisa dibaca sendiri.
 </div>
 
-Note: Ingatkan sekali lagi bahwa deck ini TIDAK berhenti di slide CORE yang baru saja dilalui — setiap Part punya slide tambahan (ditandai badge kuning "Self-Study") yang bisa diakses dengan menekan panah bawah, lengkap dengan penjelasan yang ditulis selengkap mungkin untuk dibaca tanpa pengajar, plus pertanyaan checkpoint beserta jawabannya di speaker notes.
+Note: **🗣️ Ngomong ke Peserta:**
+"Setelah sesi hari ini selesai, slide ini masih bisa kalian pakai untuk belajar mandiri di rumah.
+Cara pakainya gampang:
+Di slide mana pun, kalian bisa tekan tombol **panah bawah (↓)** pada keyboard untuk membuka slide **Self-Study** (yang ada badge kuning). Di situ pembahasannya jauh lebih dalam, ada studi kasus, dan ada pertanyaan checkpoint.
+Kalian juga bisa tekan tombol **'S'** di keyboard untuk membuka **Speaker Notes**. Di situ ada rangkuman penjelasan lengkap dan contekan jawaban seolah-olah saya sedang mendampingi kalian belajar langsung."
 
-Sebutkan juga bahwa speaker notes (tombol "S" di keyboard untuk membuka speaker view) berisi narasi lengkap seolah instruktur sedang menjelaskan — dorong peserta membuka speaker notes saat belajar mandiri, bukan hanya membaca slide-nya saja.
+**🎯 Poin Kunci di Layar:**
+- Panah bawah (↓) = Buka materi Self-Study mendalam.
+- Tombol 'S' = Buka Presenter View / Speaker Notes untuk narasi penjelasan mandiri.
 
 
 
@@ -124,9 +154,16 @@ Sebutkan juga bahwa speaker notes (tombol "S" di keyboard untuk membuka speaker 
 
 <p class="downhint">4 slide tambahan: FAQ setup, cara submit capstone, rubrik penilaian, ide pengembangan lanjutan</p>
 
-Note: Tutup dengan mengembalikan diagram yang sama persis dari slide Opening — full lingkaran selesai. Ini penutup yang secara sengaja SIMETRIS dengan pembukaan, memberi rasa "perjalanan yang utuh" ke peserta.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sebagai penutup, coba kita lihat diagram ini sekali lagi. Ini diagram yang sama persis dengan yang kita lihat di awal materi tadi:
+Browser kirim HTTP Request -> masuk ke PHP -> divalidasi -> diolah jadi query SQL ke MySQL -> database kembalikan data -> PHP bungkus jadi respons HTML -> dikirim balik ke browser.
+Bedanya, kalau tadi pagi diagram ini terasa asing, sekarang kalian sudah pegang kodenya langsung baris per baris.
+Kalau kalian bisa melihat kode kalian dan tahu: 'oh, baris ini ada di tahap Request, baris ini di tahap Validasi, baris ini di tahap SQL', selamat! Fondasi backend kalian sudah kuat.
+Sebelum kita akhiri, ada pertanyaan atau hal yang masih membingungkan? Silakan tanyakan sekarang."
 
-Buka sesi Q&A di sini. Kalau ada pertanyaan dari "parking lot" (Opening, aturan main) yang belum terjawab, ini waktunya. Kalau waktu benar-benar habis, arahkan mereka ke slide self-study yang relevan atau ke `capstone-guide.md`.
+**🎯 Poin Kunci di Layar:**
+- Diagram alur request-response lengkap: siklus belajar hari ini sudah tuntas.
+- Buka sesi tanya jawab (Q&A) untuk peserta.
 
 
 <p class="part-label">Part 10 · Self-Study</p>

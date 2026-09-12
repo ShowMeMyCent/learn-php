@@ -5,9 +5,11 @@
 
 ## Query terpendek, tapi paling berbahaya
 
-Note: Meski ini Part paling singkat dari sisi kode, jangan tergesa-gesa di bagian "kenapa harus POST" — itu adalah pelajaran keamanan/desain yang berdiri sendiri, bukan sekadar detail teknis.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita masuk ke DELETE: operasi dengan baris kode paling pendek, tapi paling mematikan kalau kita ceroboh. Begitu Part 8 ini selesai, aplikasi CRUD kita sudah 100% lengkap berdiri!"
 
-Setelah Part ini selesai, CRUD lengkap sudah berdiri sepenuhnya. Sampaikan itu di awal supaya peserta tahu mereka hampir sampai di garis akhir Core Track.
+**🎯 Poin Kunci di Layar:**
+- Fokus: Kenapa aksi hapus HARUS pakai POST, bukan link biasa.
 
 
 
@@ -27,7 +29,11 @@ DELETE FROM students WHERE id = :id;
 
 <p class="fineprint">Satu baris SQL. Tapi query terpendek bukan berarti paling sederhana untuk dirancang dengan aman.</p>
 
-Note: Tunjukkan kontras: dari sisi PANJANG KODE, DELETE adalah yang paling singkat dari semua operasi CRUD — tidak ada banyak field untuk di-`bind`, tidak ada logic kompleks. Tapi justru karena efeknya PERMANEN dan LANGSUNG (data hilang, tidak ada "undo" bawaan), operasi ini butuh perhatian ekstra soal BAGAIMANA cara memicunya — inilah fokus slide berikutnya.
+Note: **🗣️ Ngomong ke Peserta:**
+"Query-nya cuma sebaris: `DELETE FROM students WHERE id = :id`. Pendek banget. Tapi karena efeknya permanen dan gak ada tombol Ctrl+Z di database, kita harus sangat hati-hati merancang cara user memicu tombol hapus ini."
+
+**🎯 Poin Kunci di Layar:**
+- Ingatkan lagi: jangan sampai ketinggalan `WHERE id = :id`, atau seisi tabel terhapus bersih!
 
 
 
@@ -46,11 +52,15 @@ Note: Tunjukkan kontras: dari sisi PANJANG KODE, DELETE adalah yang paling singk
 
 <div class="ask"><b>Ingat dari Part 2:</b> link <code>&lt;a href&gt;</code> selalu memicu request GET. GET seharusnya TIDAK mengubah data apa pun.</div>
 
-Note: Tarik kembali langsung ke slide "GET vs POST" di Part 2 self-study, yang saat itu masih terasa abstrak — sekarang konsekuensinya konkret. Kalau tombol "Hapus" berupa link `<a href="delete.php?id=5">`, itu adalah request GET, dan beberapa hal bisa memicunya TANPA sepengetahuan atau niat user:
+Note: **🗣️ Ngomong ke Peserta:**
+"Kenapa tombol hapus DILARANG keras pakai link biasa `<a href=\"delete.php?id=5\">`?
+Ingat pelajaran Part 2: link `<a>` itu jalurnya GET! Dan jalur GET itu bisa dibuka otomatis sama siapa saja:
+1. Web crawler kayak Google Bot bakal ngeklik semua link yang ada di halaman buat diindeks.
+2. Fitur prefetch browser modern suka ngebuka link diam-diam di background biar loading lebih cepat.
+Kalau tombol hapus kalian pakai link GET, data user bisa terhapus sendiri tanpa ada orang yang beneran ngeklik tombol hapus!"
 
-Web crawler mesin pencari yang mengindeks halaman bisa mengikuti SEMUA link yang ditemukan, termasuk link hapus. Fitur "prefetch" di sebagian browser bisa memuat link yang terlihat di layar untuk mempercepat navigasi, bahkan tanpa diklik. Browser extension atau bahkan riwayat halaman yang di-refresh bisa memicu ulang GET yang sama.
-
-Tanya balik ke kelas sebelum lanjut: "Kalau tombol hapus HARUS berupa `<a>` (karena alasan styling atau lainnya), bagaimana caranya tetap membuatnya memicu POST, bukan GET?" — biarkan mereka menebak (jawabannya di slide berikutnya: bungkus dengan form).
+**🎯 Poin Kunci di Layar:**
+- Tunjuk kotak merah: link `<a>` memicu GET, fatal untuk mutasi/hapus data.
 
 
 
@@ -73,11 +83,14 @@ Tanya balik ke kelas sebelum lanjut: "Kalau tombol hapus HARUS berupa `<a>` (kar
 <?php endif; ?>
 ```
 
-Note: Tombol "Hapus" dibungkus `<form method="POST">` kecil, bukan `<a href>` — secara visual bisa tetap dibuat terlihat seperti link biasa lewat CSS kalau diinginkan, tapi secara MEKANISME tetap mengirim request POST.
+Note: **🗣️ Ngomong ke Peserta:**
+"Solusi yang benar: tombol Hapus harus dibungkus tag `<form method=\"POST\">`.
+Kalau kalian mau tampilannya mirip link biru biasa, itu urusan CSS. Tapi di balik layar, mekanismenya wajib paket POST.
+Di file `delete.php`, kita pasang satpam: kalau ada orang iseng buka file ini lewat URL (GET), langsung tolak mentah-mentah! Dia cuma mau memproses kalau request-nya adalah POST."
 
-Query `DELETE FROM students WHERE id = :id` mengikuti pola yang SAMA PERSIS seperti SELECT/UPDATE sebelumnya: `id` dari `$_GET['id']` (URL), tetap WAJIB lewat `prepare()` karena tetap input user — tidak ada pengecualian untuk DELETE.
-
-Tekankan lagi klausa `WHERE id = :id` — tanpa ini, `DELETE FROM students` akan menghapus SELURUH ISI TABEL. Ini kesalahan yang efeknya jauh lebih fatal dibanding lupa `WHERE` di UPDATE (yang "hanya" menimpa data, DELETE benar-benar menghilangkannya).
+**🎯 Poin Kunci di Layar:**
+- Tunjuk baris 1: `<form method=\"POST\">`.
+- Tunjuk baris 68: penjaga gerbang `if ($_SERVER['REQUEST_METHOD'] === 'POST')`.
 
 
 
@@ -97,11 +110,13 @@ setFlash('Data siswa berhasil dihapus.');
 header('Location: index.php'); exit;
 ```
 
-Note: `onsubmit="return confirm(...)"` adalah JavaScript bawaan browser (`confirm()`) yang menampilkan dialog Ya/Tidak SEBELUM form benar-benar disubmit — kalau user klik "Batal", `confirm()` mengembalikan `false`, dan `return false` dari `onsubmit` MEMBATALKAN pengiriman form.
+Note: **🗣️ Ngomong ke Peserta:**
+"Biar user gak kepeleset jempolnya, kita pasang dialog konfirmasi pakai JavaScript bawaan: `onsubmit=\"return confirm('Yakin hapus data ini?')\"`.
+Kalau user klik 'Cancel', form otomatis batal dikirim.
+Kalau user klik 'OK', data dihapus, pasang flash message 'Data siswa berhasil dihapus', lalu lempar balik ke `index.php` pakai PRG. Bersih dan aman!"
 
-Ini lapisan proteksi UX tambahan (mencegah klik tidak sengaja), BUKAN lapisan keamanan — sama seperti disable-button di Part 4 self-study, ini bisa dilewati kalau JavaScript dimatikan. Proteksi yang SESUNGGUHNYA tetap ada di sisi server: mewajibkan POST (bukan GET) untuk operasi ini.
-
-PRG + flash sesudahnya identik dengan pola CREATE dan UPDATE — sekali lagi, bukti bahwa satu pola sudah cukup untuk seluruh operasi mutasi data.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk `onsubmit`: proteksi UX agar user tidak sengaja menghapus data.
 
 
 
@@ -122,11 +137,15 @@ Empat operasi. Satu pola prepared statement. Satu pola PRG+flash. Satu model men
 
 <p class="downhint">3 slide tambahan: soft delete vs hard delete, detail confirm() JS, foreign key ON DELETE</p>
 
-Note: Ini momen jeda penting — CRUD sudah benar-benar lengkap dan berfungsi end-to-end. Beri waktu sebentar untuk ini terasa, jangan langsung lompat ke Part 9.
+Note: **🗣️ Ngomong ke Peserta:**
+"Beri tepuk tangan dulu buat kita semua! Empat huruf CRUD sekarang sudah lengkap kita buat: Create, Read, Update, Delete.
+Perhatikan: semuanya cuma mengulang rumus yang sama:
+1. Ambil data: pakai `query()` atau `prepare()` -> `fetch()` -> loop `foreach`.
+2. Ubah data: pakai form POST -> `prepare()` + `execute()` -> PRG redirect + flash message.
+Tinggal satu langkah terakhir sebelum kalian saya beri tantangan mandiri: Validasi data di Part 9!"
 
-Ingatkan sekali lagi: SEMUA empat operasi ini memakai prepared statement TANPA KECUALIAN, dan tiga dari empatnya (Create, Update, Delete) memakai pola PRG+flash yang SAMA PERSIS. Ini bukan kebetulan — ini adalah bukti bahwa memahami POLA lebih penting daripada menghafal SETIAP baris kode secara terpisah.
-
-Jembatan ke Part 9: "CRUD kita berfungsi dan aman dari SQL Injection/XSS. Tapi ada satu lubang lagi: sejauh ini, kita belum benar-benar MENOLAK input yang tidak masuk akal — nama kosong, email tanpa format yang benar. Itu Part 9."
+**🎯 Transisi ke Part 9:**
+- Tekan panah kanan ke Part 9.
 
 
 <p class="part-label">Part 8 · Self-Study</p>

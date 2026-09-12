@@ -1,13 +1,15 @@
 <!-- .slide: id="part-1" -->
 <p class="part-label">Part 1 · PHP Survival Guide <span class="badge badge-core">Core</span></p>
 
-# PHP dalam 12 menit
+# PHP Survival Guide
 
 ## Bukan kursus syntax &mdash; hanya delta dari C
 
-Note: Judul ini sengaja provokatif. Sampaikan eksplisit: "Saya tidak akan mengajarkan apa itu variable, apa itu if, apa itu loop — kalian sudah tahu dari C. Saya hanya akan tunjukkan apa yang BEDA."
+Note: **🗣️ Ngomong ke Peserta:**
+"Di bagian ini kita bahas secara padat dan to the point. Kenapa? Karena saya gak akan ngajarin ulang apa itu variabel, if-else, atau looping. Kalian sudah hafal itu dari bahasa C. Yang bakal saya tunjukkan di sini murni hal-hal yang BEDA antara C dan PHP."
 
-Bagian ini cepat by design. Kalau ada yang bertanya detail syntax di luar yang ditampilkan, jawab singkat lalu lanjut — detailnya ada di slide self-study.
+**🎯 Poin Kunci di Layar:**
+- Jangan berlama-lama di sintaks dasar, jaga tempo.
 
 
 
@@ -27,9 +29,12 @@ Bagian ini cepat by design. Kalau ada yang bertanya detail syntax di luar yang d
 <h1><?= $pesan ?></h1>
 ```
 
-Note: `<?= $x ?>` adalah singkatan dari `<?php echo $x; ?>` — akan sering sekali dipakai untuk mencetak nilai ke tengah HTML nanti.
+Note: **🗣️ Ngomong ke Peserta:**
+"PHP itu bahasa server-side yang sifatnya interpreted. Kodenya ditulis di dalam tag `<?php ... ?>` dan bisa diselipkan langsung di tengah dokumen HTML. Lihat baris 6: `<?= $pesan ?>` itu singkatan resmi dari `<?php echo $pesan; ?>`. Pola ini yang bakal kita pakai terus buat nampilin data mahasiswa ke dalam tabel web."
 
-Tunjukkan urutan baca: baris 1-2 itu PHP murni (tidak menghasilkan output apa pun ke browser), baris 4 kosong, baris 6 adalah HTML biasa yang menyisipkan nilai `$pesan` di tengahnya. Ini pratinjau langsung untuk pola form/table yang akan mereka tulis sepanjang sesi.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk baris 1-2: PHP memproses data.
+- Tunjuk baris 6: HTML mencetak hasilnya.
 
 
 
@@ -53,13 +58,11 @@ Tunjukkan urutan baca: baris 1-2 itu PHP murni (tidak menghasilkan output apa pu
 <span>Output HTML dikirim &rarr; proses MATI</span>
 </div>
 
-Note: Ini konsep paling penting di seluruh Part 1, lebih penting dari syntax apa pun.
+Note: **🗣️ Ngomong ke Peserta:**
+"Ini perbedaan paling penting hari ini. Di C, kalian compile jadi file binary, dijalankan, dan prosesnya hidup terus di komputer kalian sampai kalian stop. PHP itu beda: setiap kali ada browser minta halaman, server ngebaca file PHP dari baris pertama sampai akhir, ngirim HTML ke browser, lalu **PHP langsung mati dan memorinya dihapus**. PHP itu pelupa — dia gak ingat apa-apa dari request sebelumnya. Makanya nanti kita butuh Database buat nyimpan data permanen, dan Session buat nginget user."
 
-Program C yang mereka tulis di kelas sebelumnya: `main()` jalan sekali, mungkin looping menunggu input, lalu selesai. Ada satu proses, hidup selama kamu jalankan.
-
-PHP di web server: **setiap request HTTP menjalankan ulang file PHP dari baris pertama**. Tidak ada variable yang "diingat" dari request sebelumnya secara otomatis — kalau butuh itu (misalnya status login), harus disimpan eksplisit (nanti: session, Part 5). Ini menjelaskan kenapa nanti kita butuh database untuk data permanen, dan session untuk data sementara antar-request.
-
-Analogi yang membantu: C seperti orang yang tinggal di rumah dan ingat semua yang terjadi kemarin. PHP seperti orang yang lahir baru setiap kali pintu diketuk, membaca "buku catatan" (database/session) untuk tahu apa yang terjadi sebelumnya, lalu mati lagi setelah menjawab.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk kata 'MATI': tekankan sifat stateless PHP. Inilah alasan mendasar kenapa web butuh database.
 
 
 
@@ -83,9 +86,11 @@ Analogi yang membantu: C seperti orang yang tinggal di rumah dan ingat semua yan
 
 <p class="fineprint">Klik kanan browser &rarr; "View Page Source". Cari kata <code>php</code> di situ.</p>
 
-Note: Jalankan file ini sungguhan, lalu buka View Page Source dan tunjukkan: **tidak ada satu pun kata `php` di HTML yang diterima browser**. Semua sudah diproses jadi teks biasa di server.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sekarang kita buktikan. Kalau file ini dibuka di browser, terus kalian klik kanan -> 'View Page Source', kalian gak bakal nemu satu pun tag `<?php`. Semuanya sudah berubah jadi teks HTML polos `<h1>Halo, Dunia!</h1>`. Kenapa? Karena browser cuma ngerti HTML. Semua kode PHP kalian sudah selesai dieksekusi di server sebelum dikirim."
 
-Ini bukti visual dari model mental "PHP → HTML sebelum sampai ke browser". Kalau ada peserta yang masih menganggap browser "menjalankan" PHP, momen ini biasanya yang meluruskan.
+**🎯 Poin Kunci di Layar:**
+- Tekankan: Browser klien tidak pernah mengeksekusi PHP.
 
 
 
@@ -122,9 +127,11 @@ $ipk = 3.75;
 </div>
 </div>
 
-Note: Dua hal yang perlu ditekankan: tanda `$` di depan SEMUA variable (tidak ada pengecualian, tidak seperti C yang variable-nya polos), dan **dynamic typing** — tipe ditentukan otomatis dari nilai, bisa berubah nilainya jadi tipe lain di baris berikutnya.
+Note: **🗣️ Ngomong ke Peserta:**
+"Di PHP, semua variabel wajib diawali tanda dollar `$`. Gak perlu deklarasi `int`, `char`, atau `float` karena PHP itu dynamically typed. Enaknya: nulisnya cepat. Bahayanya: kalau ada salah tipe data, compiler gak bakal ngingetin kita kayak di C. Errornya baru meledak saat web dibuka. Makanya nanti di Part 9 kita wajib bikin validasi input sendiri."
 
-Ingatkan bahwa dynamic typing itu pedang bermata dua: cepat ditulis, tapi bug tipe data yang di C akan tertangkap compiler, di PHP baru ketahuan saat runtime. Ini alasan kenapa nanti kita akan rajin melakukan validasi eksplisit di Part 9 — PHP tidak akan menolak `$umur = "dua puluh"` seperti C akan menolak `int umur = "dua puluh";`.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk tanda `$`: jangan sampai lupa nulis dollar di variabel PHP.
 
 
 
@@ -159,9 +166,11 @@ echo "Halo, " . $nama . "!";
 
 <p class="fineprint">Petik ganda <code>"..."</code> membaca isi variable. Petik tunggal <code>'...'</code> tidak.</p>
 
-Note: Titik (`.`) adalah operator concat di PHP, bukan `+` seperti bahasa lain dan bukan `strcat()` seperti C. Ini salah satu typo paling umum peserta baru: menulis `"Halo " + $nama` dan bingung kenapa hasilnya aneh — PHP akan mencoba operasi aritmatika, bukan error tegas.
+Note: **🗣️ Ngomong ke Peserta:**
+"Buat gabung string, di PHP kita pakai tanda titik `.`, bukan tanda tambah `+` dan bukan `strcat()`. Kalau kalian tulis petik dua `\"...\"`, variabel di dalamnya otomatis diterjemahkan nilainya (interpolasi). Tapi kalau petik satu `'...'`, PHP bakal anggap itu teks mentah apa adanya."
 
-Interpolasi (baris 1, petik ganda) jauh lebih sering dipakai daripada concat (baris 3) untuk string pendek. Tapi ingatkan: `$nama['key']` di dalam petik ganda kadang butuh kurung kurawal `{$arr['key']}` — cukup disebut sekilas, detail di self-study.
+**⚠️ Antisipasi Error:**
+- Typo nomor satu peserta: menulis `"Halo " + $nama`. Ingatkan di PHP itu bakal dianggap penjumlahan angka matematika!
 
 
 
@@ -199,11 +208,11 @@ $mhs["name"]; // "Ayu Lestari"
 
 <div class="ask"><b>Ingat baik-baik:</b> setiap baris hasil query database nanti berbentuk PERSIS seperti ini — array dengan kunci nama kolom.</div>
 
-Note: Ini slide paling penting di seluruh Part 1. Jangan buru-buru.
+Note: **🗣️ Ngomong ke Peserta:**
+"Tolong perhatikan slide ini baik-baik. Kalau kalian paham slide ini, separuh materi CRUD hari ini sudah kalian kuasai. Di C, array cuma bisa dipanggil pakai angka: `nilai[0]`, `nilai[1]`. Di PHP ada yang namanya Associative Array: kuncinya pakai kata, kayak kamus. Nanti, setiap data mahasiswa yang kita ambil dari database bentuknya persis kayak gini: `$mhs['name']`, `$mhs['email']`."
 
-Di C, array cuma bisa diakses dengan index angka (`nilai[0]`, `nilai[1]`). PHP associative array mengizinkan kunci berupa string — dan ini BUKAN fitur eksotis, ini adalah bentuk data yang akan mereka lihat berulang-ulang: `$_POST['name']`, `$_GET['id']`, dan (paling penting) setiap baris hasil `fetch()` dari database nanti di Part 3.
-
-Sampaikan eksplisit: "Kalau kalian paham slide ini, separuh jalan menuju paham CRUD sudah selesai." Tidak berlebihan — pola `$row['kolom']` akan muncul di hampir setiap file PHP yang mereka tulis hari ini.
+**🎯 Poin Kunci di Layar:**
+- Tunjuk sintaks panah `=>` dan cara akses `$mhs['name']`. Ini fondasi data sepanjang webinar.
 
 
 
@@ -236,9 +245,11 @@ foreach ($mahasiswa as $mhs) {
 
 <div class="ask"><b>Bayangkan:</b> <code>$mahasiswa</code> adalah HASIL QUERY dari database — daftar semua siswa. <code>foreach</code> akan menjadi cara kita mencetaknya sebagai baris tabel HTML.</div>
 
-Note: `foreach` menggantikan pola `for (int i = 0; i < n; i++)` ketika yang kita mau hanyalah "lakukan sesuatu untuk setiap elemen", tanpa perlu index secara eksplisit (meski `foreach ($arr as $key => $val)` bisa memberi index/kunci juga — sebutkan sekilas, detail di self-study).
+Note: **🗣️ Ngomong ke Peserta:**
+"Di C, kita muter array pakai counter `for (int i = 0; ...)`. Di PHP, kita cukup pakai `foreach ($mahasiswa as $mhs)`. Bayangkan `$mahasiswa` itu sekeranjang isi data seluruh mahasiswa dari database, dan `$mhs` itu satu orang mahasiswa yang lagi kita pegang di tiap putaran. Nanti di Part 3, kita tinggal bungkus ini ke dalam tag `<tr>` dan `<td>` tabel HTML."
 
-Tarik garis lurus ke depan: gabungan associative array + foreach ADALAH pola yang akan mereka tulis untuk menampilkan data siswa di Part 3. `foreach ($students as $s) { echo $s['name']; }`. Kalau slide ini dan slide sebelumnya sudah klik, Part 3 akan terasa seperti "oh, tinggal pakai yang tadi".
+**🎯 Poin Kunci di Layar:**
+- Hubungkan langsung Associative Array di slide sebelumnya dengan `foreach` ini.
 
 
 
@@ -253,9 +264,11 @@ Tarik garis lurus ke depan: gabungan associative array + foreach ADALAH pola yan
 
 <p class="downhint">6 slide tambahan di bawah: perbandingan == vs ===, function, array toolkit, superglobals, include/require, error_reporting</p>
 
-Note: Jembatan ke Part 2: "Sekarang kalian sudah tahu bentuk data PHP. Pertanyaannya: DARI MANA data itu datang? Bagaimana caranya input dari form HTML sampai ke variable PHP?" — itu tepat yang akan dijawab Part 2.
+Note: **🗣️ Ngomong ke Peserta:**
+"Sip, recap kilat: PHP hidup per-request, variabel pakai `$`, gabung string pakai `.`, dan datanya pakai array asosiatif. Nah, sekarang pertanyaannya: dari mana datangnya data itu pertama kali? Gimana caranya isian yang diketik user di form HTML bisa nyampe ke variabel PHP? Kita masuk ke Part 2."
 
-Kalau waktu longgar (jarang terjadi, tapi kalau ya), ini titik aman untuk singgah ke satu-dua slide self-study seperti `==` vs `===` karena itu sumber bug umum. Kalau waktu ketat, langsung lanjut.
+**🎯 Transisi ke Part 2:**
+- Langsung tekan panah kanan ke Part 2. Slide ke bawah untuk peserta baca mandiri nanti di rumah.
 
 
 <p class="part-label">Part 1 · Self-Study</p>
